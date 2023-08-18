@@ -223,17 +223,15 @@
             if(res.status == 201){
                 alert("login succesfully")
             }
-            if(res.status == 400){
-                alert("Password wrong")
-            }
+        
             // console.log(res)Request failed with status code 400
 
         } catch (err) {
             console.log(err)
-            if(err.message === 'Request failed with status code 500'){
+            if(err.message === 'Request failed with status code 401'){
                 alert("Password wrong")
             }
-            if(err.message === 'Request failed with status code 400'){
+            if(err.message === 'Request failed with status code 404'){
                 alert("Incoorrect Email")
             }
             // console.log('msg'+) 
