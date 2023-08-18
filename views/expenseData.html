@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+    <title>Hello, world!</title>
+
+    <style>
+        /* body{
+        justify-content: center;
+
+      } */
+
+        #call {
+            display: flex;
+        }
+
+        form {
+          
+            border: 1px solid rgb(0, 157, 255);
+            background-color: white;
+            margin-left: 5%;
+            height: 500px;
+            align-items: center;
+        }
+
+        .item {
+            margin-top: 5px;
+            margin-left: 5px;
+        }
+
+        h3 {
+            /* justify-content: center; */
+            text-align: center;
+            /* margin-left: 40%; */
+        }
+
+        p {
+            text-align: center;
+            /* margin-left: 15%; */
+        }
+
+        .rat {
+            background-color: rgb(0, 157, 255);
+            color: white;
+            width: 100%;
+            border: 3px solid white;
+            text-align: center;
+
+        }
+
+        .new {
+            background-color: rgb(0, 157, 255);
+            color: white;
+        }
+
+        .listi {
+            margin-top: 2px;
+        }
+
+        #details {
+            width: 100%;
+            /* margin-left: 30%; */
+        }
+
+        .blue {
+            background-color: grey;
+        }
+
+        .contain {
+
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .fstCont {
+            width: 50%;
+        }
+        
+        .detailCon {
+            width: 50%;
+            background-color: white;
+            border: 5px solid rgb(0, 157, 255);
+            height: 500px;
+            margin-right: 15px;
+
+
+        }
+
+        #update {
+            background-color: aqua;
+            color: black;
+            font-size: 25px;
+        }
+
+        #delBtn {
+            margin-left: 10px;
+
+        }
+
+        body {
+            background-color: rgb(52, 117, 95);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contain">
+        <div class="fstCont">
+
+            <form>
+
+                <h3></i>Enter Your Expense </h3>
+                <p id="token"></p>
+
+                <hr>
+
+                <div class="form-group">
+                    <label>Choose Expense Amount </label>
+                    <select class="form-control" id="expense">
+                        <option>100</option>
+                        <option>200</option>
+                        <option>300</option>
+                        <option>400</option>
+                        <option>500</option>
+                    </select>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="">Enter Description:</label>
+                    <input type="text" required class="form-control" id="description"
+                        placeholder="Enter description here">
+                </div>
+
+
+
+
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Choose a Category</label>
+                    <select class="form-control" required id="category">
+                        <option>Comedy</option>
+                        <option>Action</option>
+                        <option>Drama</option>
+                        <option>Horror</option>
+                        <option>Science Fiction</option>
+                    </select>
+                </div>
+
+
+
+
+                <button class="rat" type="submit" id="mouseover" onclick="consolevalue(event)">Submit</button>
+                <button class="rat" type="submit" id="update" onclick="updateData(event)">Update</button>
+
+                <ul id="some"></ul>
+            </form>
+        </div>
+        <div class="detailCon">
+
+            <h3>Expense Details</h3>
+            <hr>
+            <ol id="details" class="list">
+
+            </ol>
+        </div>
+    </div>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+
+
+<script>
+
+
+
+    async function getDetails() {
+        // console.log("here")
+        try {
+            let Updatebtn = document.getElementById("update");
+            Updatebtn.hidden = true;
+            let submitBtn = document.getElementById("mouseover");
+            submitBtn.hidden = false;
+            let res = await axios.get("http://localhost:4000/user/get-data")
+            // console.log(res.data.userdetails)
+            showOutputOfGet(res.data.userdetails);
+        } catch (err) { console.log(err) }
+    }
+    // console.log(res)
+
+
+    getDetails()
+
+
+
+
+
+    async function consolevalue(event) {
+        try {
+            event.preventDefault();
+
+            let expense = document.getElementById("expense").value;
+            let description = document.getElementById("description").value;
+            if (!description) {
+                alert('Fill the form')
+                let des = document.getElementById("description")
+                des.style.border = '2px solid red'
+                return
+            }
+            else {
+                let des = document.getElementById("description")
+                des.style.border = 'none'
+
+            }
+
+            let category = document.getElementById("category").value;
+            // console.log(expense, description, category);
+            // name.value = ""
+
+            const obj = {
+                expense: expense,
+                description: description,
+                category: category
+            }
+
+            let Updatebtn = document.getElementById("update");
+            Updatebtn.hidden = true;
+            let submitBtn = document.getElementById("mouseover");
+            submitBtn.hidden = false;
+
+
+            let res = await axios.post("http://localhost:4000/user/expense-data", obj)
+
+            let exp = res.data.userdetails.expense
+            let des = res.data.userdetails.description
+            let cat = res.data.userdetails.category
+            let id = res.data.userdetails.id
+
+            console.log(des)
+            showOutput(id, exp, des, cat)
+            document.getElementById("expense").value = "";
+            document.getElementById("description").value = "";
+            document.getElementById("phone").value = "";
+            //  }).catch((err)=> console.log(err))
+        } catch (err) { console.log("err" + err) }
+
+
+    }
+
+    // for post response
+    function showOutput(id, expense, des, category) {
+        // console.log('des-'+des)
+
+        let details = document.getElementById("details");
+
+        let div = document.createElement("div")
+
+        div.innerHTML = `<li class="item">${expense}-${category}-${des}<button onClick="deleteData(event,'${id}')" id="delBtn" type="submit" value="Delete" class="btn btn-danger">Delete</button> <button type="button" class="btn btn-secondary" onClick="editData(event,'${id}')" id="submit" class="btnEdit" type="submit">Edit</button></li>`;
+
+
+
+
+        details.append(div)
+
+        let Updatebtn = document.getElementById("update");
+        Updatebtn.hidden = true;
+        let submitBtn = document.getElementById("mouseover");
+        submitBtn.hidden = false;
+    }
+
+    // for get response
+    function showOutputOfGet(data) {
+
+        // console.log(data[0].email)
+        let details = document.getElementById("details");
+        details.innerHTML = "";
+
+        let arr = data.forEach(element => {
+            // console.log(element._id)
+
+            let div = document.createElement("div")
+
+            div.innerHTML = `<li class="item">${element.expense}-${element.category}-${element.description}<button onClick="deleteData(event,'${element.id}')" id="delBtn" type="submit" value="Delete" class="btn btn-danger">Delete</button> <button type="button" class="btn btn-secondary" onClick="editData(event,'${element.id}')" id="submit" class="btnEdit" type="submit">Edit</button></li>`;
+
+
+
+            details.append(div)
+        });
+        let Updatebtn = document.getElementById("update");
+        Updatebtn.hidden = true;
+        let submitBtn = document.getElementById("mouseover");
+        submitBtn.hidden = false;
+    }
+
+    // deleting element form data
+    async function deleteData(event, id) {
+        try {
+
+            // console.log(id)
+            event.preventDefault();
+            // let site
+            let site = `http://localhost:4000/user/raat-data/${id}`
+            await axios.get(site)
+            //  console.log('res')
+            let Updatebtn = document.getElementById("update");
+            Updatebtn.hidden = true;
+            let submitBtn = document.getElementById("mouseover");
+            submitBtn.hidden = false;
+            getDetails()
+        } catch (err) { console.log(err) }
+        // console.log(id)
+    }
+
+    // editing data
+    async function editData(event, id) {
+        try {
+
+
+            event.preventDefault();
+            console.log(id)
+            // let site
+            let site = `http://localhost:4000/user/edit-data/${id}`
+            let res = await axios.get(site)
+            console.log(res.data)
+            getContent(res.data.userdetails[0], res.data.userdetails[0].id)
+        } catch (err) { console.log(err) }
+    }
+
+
+    // edit contain
+    function getContent(data, id) {
+        localStorage.setItem("key", id)
+        // console.log(id)
+        document.getElementById("expense").value = data.expense;
+        document.getElementById("description").value = data.description;
+        document.getElementById("category").value = data.category;
+        let btn = document.getElementById("update");
+        btn.hidden = false;
+        let submitBtn = document.getElementById("mouseover");
+        submitBtn.hidden = true;
+
+
+
+    }
+
+
+
+
+    async function updateData(event) {
+
+        try {
+            event.preventDefault();
+
+            let id = localStorage.getItem('key')
+            console.log(typeof (id))
+
+
+            let expense = document.getElementById("expense").value;
+            let description = document.getElementById("description").value;
+            let category = document.getElementById("category").value;
+
+            let obj = {
+                id: id,
+                updatedExpense: expense,
+                updatedDescription: description,
+                updatecatagory: category
+            }
+
+            // console.log(obj)
+            console.log("here")
+            let site = `http://localhost:4000/user/updated-data`
+
+            let res = await axios.post(site, obj)
+
+            // console.log(res.status)
+            getDetails()
+            localStorage.removeItem("key")
+            document.getElementById("expense").value = "";
+            document.getElementById("description").value = "";
+            document.getElementById("category").value = "";
+            // showOutput(res)
+            let Updatebtn = document.getElementById("update");
+            Updatebtn.hidden = true;
+            let submitBtn = document.getElementById("mouseover");
+            submitBtn.hidden = false;
+
+            console.log("update")
+        } catch (err) { console.log(err) }
+    }
+
+</script>
+
+</html>
