@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser')
+const bcrypt = require('bcrypt')// for encryption of password
 
 const sequelize = require('./utill/database');
 const sinUp = require('./models/userSinup')
@@ -11,52 +12,70 @@ app.use(cors());
 app.use(bodyParser.json());
 
 //sinup data
-app.post('/user/expense-sinup-data', async (req, res, next)=>{
+app.post('/user/expense-sinup-data', async (req, res, next) => {
 
-    try{
-    console.log('here')
+    try {
+        console.log('here')
 
-    const name = req.body.name;
-    const email = req.body.email;
-    const passWord = req.body.password;
+        const name = req.body.name;
+        const email = req.body.email;
+        const passWord = req.body.password;
 
-    await sinUp.create({
-        name: name,
-        email : email,
-        passWord : passWord
-    })
+        // encryption
+        const saltrounds = 10;
+        bcrypt.hash(passWord, saltrounds, async (err, hash) => {
+            console.log(err)
+            await sinUp.create({
+                name: name,
+                email: email,
+                passWord: hash
+            })
+            res.status(201).json({ msg: 'Regitered' })
+        })
 
-    res.status(201).json({data : sinUp})
-}catch (err) {
-    console.error("error 66"+ err);
-    if(err == 'SequelizeUniqueConstraintError: Validation error'){
-       
-        res.status(400).json(err);
+
+    } catch (err) {
+        // console.error("error 66" + err);
+        if (err == 'SequelizeUniqueConstraintError: Validation error') {
+
+            res.status(400).json(err);
+        }
     }
-  }
 
 
 })
 
+// login 
+app.post('/user/expense-login-data', async (req, res) => {
+    try {
+        const logInemail = req.body.email
+        const logInPassword = req.body.password
 
-app.post('/user/expense-login-data', async(req, res)=>{
-    try{
-    const logInemail = req.body.email
-    const logInPassword = req.body.password
+        const user = await sinUp.findAll({ where: { email: logInemail } })
 
-    const user = await sinUp.findAll({where : {email : logInemail}})
+        // console.log(user[0].passWord)
+        let flag;
 
-    // console.log(user[0].passWord)
+        bcrypt.compare(logInPassword,user[0].passWord,(err, result)=>{
+            if(err){
+                res.status(500).json({ msg: 'Something is wrong' })
+            }
+            if(result==true){
+                res.status(201).json({ msg: 'Login Succesfull' })
+            }else{
+                res.status(401).json({ msg: 'Incorrect Password' }) 
+            }
+        })
 
-    if(user[0].passWord == logInPassword){
-        res.status(201).json({msg : 'Login Succesfull'})
-    }else{
-        res.status(401).json({msg : 'Incorrect Password'})
-    }
-    }catch(err){
+        // if (flag) {
+        //     res.status(201).json({ msg: 'Login Succesfull' })
+        // } else {
+        //     res.status(401).json({ msg: 'Incorrect Password' })
+        // }
+    } catch (err) {
         // console.log(' err msg -'+ err)
-        if(err == "TypeError: Cannot read properties of undefined (reading 'passWord')"){
-           
+        if (err == "TypeError: Cannot read properties of undefined (reading 'passWord')") {
+
             res.status(404).json(err)
         }
     }
