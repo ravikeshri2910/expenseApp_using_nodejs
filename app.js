@@ -8,7 +8,8 @@ const sinUp = require('./models/userSinup')
 const expenseData = require('./models/expenseData');
 const expenseRouter = require('./router/expenseDataRout')
 const userRouter = require('./router/userDataRout')
-
+const Order = require('./models/order')
+const purchaseRouter = require('./router/purchase')
 
 
 
@@ -20,6 +21,9 @@ app.use(bodyParser.json());
 sinUp.hasMany(expenseData)
 expenseData.belongsTo(sinUp)
 
+sinUp.hasMany(Order);
+Order.belongsTo(sinUp)
+
 
 // creating expense
 app.use('/logIn',expenseRouter)
@@ -27,6 +31,10 @@ app.use('/logIn',expenseRouter)
 
 //sinup and login data
 app.use('/user', userRouter)
+
+
+//primum route
+app.use('/purchase',purchaseRouter)
 
 
 

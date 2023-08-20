@@ -5,7 +5,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../utill/database');
 
 
-const expenseData = sequelize.define('expenseData', {
+const expenseData = sequelize.define('expensedata', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

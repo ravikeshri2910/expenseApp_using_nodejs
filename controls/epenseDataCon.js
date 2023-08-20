@@ -15,7 +15,7 @@ exports.creatingExpense =  async(req, res)=>{
             expense : expense,
             description : description,
             category : category,
-            sinUpId:userId
+            sinupId:userId
         })
 
         res.status(201).json({ userdetails : data})
@@ -29,10 +29,11 @@ exports.gettinAllData = async(req, res)=>{
         const userId = req.user.id
         console.log('userId ...'+ userId)
    
-        let data = await expenseData.findAll({where:{sinUpId : userId}})
+        let data = await expenseData.findAll({where:{sinupId : userId}})
         // console.log(data)
-        res.locals.user = req.user
-        res.status(201).json({ userdetails: data })
+        // res.locals.user = req.user
+        let user = req.user
+        res.status(201).json({ userdetails: data , user : user})
 
     }catch(err){console.log(err)}
 }

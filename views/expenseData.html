@@ -23,7 +23,7 @@
         }
 
         form {
-          
+
             border: 1px solid rgb(0, 157, 255);
             background-color: white;
             margin-left: 5%;
@@ -83,7 +83,7 @@
         .fstCont {
             width: 50%;
         }
-        
+
         .detailCon {
             width: 50%;
             background-color: white;
@@ -108,6 +108,15 @@
         body {
             background-color: rgb(52, 117, 95);
         }
+
+        #premium {
+            background-color: goldenrod;
+            border: none;
+        }
+
+        #member {
+            color: goldenrod;
+        }
     </style>
 </head>
 
@@ -117,6 +126,11 @@
         <div class="fstCont">
 
             <form>
+                <button id="premium" type="button" class="btn btn-secondary" onclick="buyPremium(event)">Buy
+                    Premium</button>
+
+                <h3 id="member" hidden>Primium Member</h3>
+                <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
                 <h3></i>Enter Your Expense </h3>
                 <p id="token"></p>
@@ -164,6 +178,7 @@
 
                 <ul id="some"></ul>
             </form>
+            <button id="premium" type="button" class="btn btn-secondary" onclick="logOut(event)">Log out</button>
         </div>
         <div class="detailCon">
 
@@ -195,6 +210,10 @@
 
 <script>
 
+    function logOut(event){
+        localStorage.clear()
+        window.location.href="login.html"
+    }
 
     // get data
     async function getDetails() {
@@ -209,8 +228,15 @@
             console.log(token)
 
             const site = `http://localhost:4000/logIn/get-data`
-            let res = await axios.get(site,{headers : {"Authorization": token}})
-            
+            let res = await axios.get(site, { headers: { "Authorization": token } })
+
+            console.log(res.data.user.isPremium)
+            if (res.data.user.isPremium == true) {
+                let pbtn = document.getElementById('premium');
+                pbtn.hidden = true;
+                let ptag = document.getElementById('member');
+                ptag.hidden = false;
+            }
             showOutputOfGet(res.data.userdetails);
         } catch (err) { console.log(err) }
     }
@@ -246,14 +272,14 @@
             // name.value = ""
             let token = localStorage.getItem('token')
             // let userId = localStorage.getItem('userId')
-            console.log('token ......'+token);
-            
+            console.log('token ......' + token);
+
 
             const obj = {
                 expense: expense,
                 description: description,
                 category: category,
-                // sinUpId : userId
+                // npm start
             }
 
             let Updatebtn = document.getElementById("update");
@@ -262,7 +288,7 @@
             submitBtn.hidden = false;
 
 
-            let res = await axios.post("http://localhost:4000/logIn/expense-data", obj , {headers : {"Authorization": token}})
+            let res = await axios.post("http://localhost:4000/logIn/expense-data", obj, { headers: { "Authorization": token } })
 
             let exp = res.data.userdetails.expense
             let des = res.data.userdetails.description
@@ -327,17 +353,18 @@
             // console.log(id)
             event.preventDefault();
             // let site
+            let token = localStorage.getItem('token')
             let site = `http://localhost:4000/logIn/raat-data/${id}`
-            let res = await axios.get(site)
+            let res = await axios.get(site,{ headers: { "Authorization": token } })
             console.log(res.status)
-            if(res.status === 201){
+            if (res.status === 201) {
                 getDetails()
             }
             let Updatebtn = document.getElementById("update");
             Updatebtn.hidden = true;
             let submitBtn = document.getElementById("mouseover");
             submitBtn.hidden = false;
-            
+
         } catch (err) { console.log(err) }
         // console.log(id)
     }
@@ -350,8 +377,9 @@
             event.preventDefault();
             console.log(id)
             // let site
+            let token = localStorage.getItem('token')
             let site = `http://localhost:4000/logIn/edit-data/${id}`
-            let res = await axios.get(site)
+            let res = await axios.get(site,{ headers: { "Authorization": token } })
             // console.log(res.data)
             getContent(res.data.userdetails[0], res.data.userdetails[0].id)
         } catch (err) { console.log(err) }
@@ -376,7 +404,7 @@
 
 
 
-// Update data
+    // Update data
     async function updateData(event) {
 
         try {
@@ -419,6 +447,57 @@
 
             console.log("update")
         } catch (err) { console.log(err) }
+    }
+
+    async function buyPremium(event) {
+
+        try {
+            event.preventDefault();
+            const token = localStorage.getItem('token');
+
+            const site = `http://localhost:4000/purchase/premiummembership`
+            const response = await axios.get(site, { headers: { "Authorization": token } })
+
+            console.log(response)
+
+            const options = {
+                "key": response.data.key_id,// Enter the key id genetated from dashboard
+                "order_id": response.data.order.id,// enter the oder id
+
+                // now Handeler function will handel the success payment
+
+                "handler": async function (response) {
+                    let res = await axios.post('http://localhost:4000/purchase/updatetransactionstatus', {
+                        order_id: options.order_id,
+                        payment_id: response.razorpay_payment_id,
+                    }, { headers: { "Authorization": token } })
+                    console.log(res.status)
+                    alert("Payment succesfull")
+                    getDetails()
+                }
+            }
+        } catch (err) { console.log(err) }
+
+        const rzp1 = new Razorpay(options);
+        rzp1.open()
+
+        rzp1.on('payment.failed', async function (response) {
+
+            try {
+                console.log(response.error.metadata)
+
+                const token = localStorage.getItem('token');
+                await axios.post('http://localhost:4000/purchase/failed/updatetransactionstatus', {
+                    order_id: response.error.metadata.order_id,
+                    payment_id: response.error.metadata.payment_id,
+                }, { headers: { "Authorization": token } })
+
+                // console.log(res.status)    
+
+                alert('Payment Failed')
+                getDetails()
+            } catch (err) { console.log(err) }
+        })
     }
 
 </script>

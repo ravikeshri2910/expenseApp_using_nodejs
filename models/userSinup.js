@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../utill/database');
 
-const sinUp = sequelize.define('sinUp',{
+const sinups = sequelize.define('sinups',{
 
     id : {
         type : Sequelize.INTEGER,
@@ -15,7 +15,8 @@ const sinUp = sequelize.define('sinUp',{
         type : Sequelize.STRING,
         unique : true
     },
-    passWord : Sequelize.STRING
+    passWord : Sequelize.STRING,
+    isPremium : Sequelize.BOOLEAN,
 });
 
-module.exports = sinUp;
+module.exports = sinups;

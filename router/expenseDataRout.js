@@ -8,13 +8,13 @@ const router = express.Router();
 router.post('/expense-data',authorization.authenticateAddExpense,expenseDataCon.creatingExpense)
 
 //geting all data after login
-router.get('/get-data',authorization.authenticateAddExpense, expenseDataCon.gettinAllData)
+router.get('/get-data',authorization.authenticate, expenseDataCon.gettinAllData)
 
 // deleting expense
-router.get('/raat-data/:id', expenseDataCon.deleteData)
+router.get('/raat-data/:id',authorization.authenticate, expenseDataCon.deleteData)
 
 // editing expense
-router.get('/edit-data/:id',expenseDataCon.editingData)
+router.get('/edit-data/:id',authorization.authenticate,expenseDataCon.editingData)
 
 // updating data
 router.post('/updated-data', expenseDataCon.updateData)
