@@ -218,10 +218,14 @@
             email.value = ""
             password.value = ""
 
-            console.log(res.msg)
-           
+            
             if(res.status == 201){
-                alert("login succesfully")
+                // console.log(res.data)
+                // alert("login succesfully")
+                // localStorage.setItem('userId',res.data.userdetails[0].id)
+                localStorage.setItem('token',res.data.token)
+                // console.log(res.data.userdetails[0].id)
+                // console.log(res.data.token)
                 window.location.href="expenseData.html"
             }
         

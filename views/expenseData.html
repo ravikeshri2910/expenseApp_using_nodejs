@@ -196,7 +196,7 @@
 <script>
 
 
-
+    // get data
     async function getDetails() {
         // console.log("here")
         try {
@@ -204,8 +204,13 @@
             Updatebtn.hidden = true;
             let submitBtn = document.getElementById("mouseover");
             submitBtn.hidden = false;
-            let res = await axios.get("http://localhost:4000/user/get-data")
-            // console.log(res.data.userdetails)
+            // let userId = localStorage.getItem('userId')
+            let token = localStorage.getItem('token')
+            console.log(token)
+
+            const site = `http://localhost:4000/logIn/get-data`
+            let res = await axios.get(site,{headers : {"Authorization": token}})
+            
             showOutputOfGet(res.data.userdetails);
         } catch (err) { console.log(err) }
     }
@@ -217,7 +222,7 @@
 
 
 
-
+    // adding data
     async function consolevalue(event) {
         try {
             event.preventDefault();
@@ -239,11 +244,16 @@
             let category = document.getElementById("category").value;
             // console.log(expense, description, category);
             // name.value = ""
+            let token = localStorage.getItem('token')
+            // let userId = localStorage.getItem('userId')
+            console.log('token ......'+token);
+            
 
             const obj = {
                 expense: expense,
                 description: description,
-                category: category
+                category: category,
+                // sinUpId : userId
             }
 
             let Updatebtn = document.getElementById("update");
@@ -252,7 +262,7 @@
             submitBtn.hidden = false;
 
 
-            let res = await axios.post("http://localhost:4000/user/expense-data", obj)
+            let res = await axios.post("http://localhost:4000/logIn/expense-data", obj , {headers : {"Authorization": token}})
 
             let exp = res.data.userdetails.expense
             let des = res.data.userdetails.description
@@ -266,8 +276,6 @@
             document.getElementById("phone").value = "";
             //  }).catch((err)=> console.log(err))
         } catch (err) { console.log("err" + err) }
-
-
     }
 
     // for post response
@@ -279,9 +287,6 @@
         let div = document.createElement("div")
 
         div.innerHTML = `<li class="item">${expense}-${category}-${des}<button onClick="deleteData(event,'${id}')" id="delBtn" type="submit" value="Delete" class="btn btn-danger">Delete</button> <button type="button" class="btn btn-secondary" onClick="editData(event,'${id}')" id="submit" class="btnEdit" type="submit">Edit</button></li>`;
-
-
-
 
         details.append(div)
 
@@ -322,14 +327,17 @@
             // console.log(id)
             event.preventDefault();
             // let site
-            let site = `http://localhost:4000/user/raat-data/${id}`
-            await axios.get(site)
-            //  console.log('res')
+            let site = `http://localhost:4000/logIn/raat-data/${id}`
+            let res = await axios.get(site)
+            console.log(res.status)
+            if(res.status === 201){
+                getDetails()
+            }
             let Updatebtn = document.getElementById("update");
             Updatebtn.hidden = true;
             let submitBtn = document.getElementById("mouseover");
             submitBtn.hidden = false;
-            getDetails()
+            
         } catch (err) { console.log(err) }
         // console.log(id)
     }
@@ -342,9 +350,9 @@
             event.preventDefault();
             console.log(id)
             // let site
-            let site = `http://localhost:4000/user/edit-data/${id}`
+            let site = `http://localhost:4000/logIn/edit-data/${id}`
             let res = await axios.get(site)
-            console.log(res.data)
+            // console.log(res.data)
             getContent(res.data.userdetails[0], res.data.userdetails[0].id)
         } catch (err) { console.log(err) }
     }
@@ -368,14 +376,15 @@
 
 
 
-
+// Update data
     async function updateData(event) {
 
         try {
             event.preventDefault();
 
             let id = localStorage.getItem('key')
-            console.log(typeof (id))
+            // console.log(typeof (id))
+            let userId = localStorage.getItem('userId')
 
 
             let expense = document.getElementById("expense").value;
@@ -386,12 +395,13 @@
                 id: id,
                 updatedExpense: expense,
                 updatedDescription: description,
-                updatecatagory: category
+                updatecatagory: category,
+
             }
 
             // console.log(obj)
             console.log("here")
-            let site = `http://localhost:4000/user/updated-data`
+            let site = `http://localhost:4000/logIn/updated-data`
 
             let res = await axios.post(site, obj)
 
