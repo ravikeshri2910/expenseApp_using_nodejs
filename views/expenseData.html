@@ -27,7 +27,7 @@
             border: 1px solid rgb(0, 157, 255);
             background-color: white;
             margin-left: 5%;
-            height: 500px;
+            height: 700px;
             align-items: center;
         }
 
@@ -36,7 +36,7 @@
             margin-left: 5px;
         }
 
-        h3 {
+        h4 {
             /* justify-content: center; */
             text-align: center;
             /* margin-left: 40%; */
@@ -88,7 +88,7 @@
             width: 50%;
             background-color: white;
             border: 5px solid rgb(0, 157, 255);
-            height: 500px;
+            height: 700px;
             margin-right: 15px;
 
 
@@ -117,6 +117,7 @@
         #member {
             color: goldenrod;
         }
+       
     </style>
 </head>
 
@@ -129,17 +130,18 @@
                 <button id="premium" type="button" class="btn btn-secondary" onclick="buyPremium(event)">Buy
                     Premium</button>
 
-                <h3 id="member" hidden>Primium Member</h3>
+                <h5 id="member" hidden>Primium Member</h5>
                 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                <p id="userName"></p>
 
-                <h3></i>Enter Your Expense </h3>
+                <h4></i>Enter Your Expense </h4>
                 <p id="token"></p>
 
                 <hr>
 
                 <div class="form-group">
                     <label>Choose Expense Amount </label>
-                    <select class="form-control" id="expense">
+                    <select class="form-control" id="expense"  >
                         <option>100</option>
                         <option>200</option>
                         <option>300</option>
@@ -151,7 +153,7 @@
 
 
                 <div class="form-group">
-                    <label for="">Enter Description:</label>
+                    <!-- <label for="">Enter Description:</label> -->
                     <input type="text" required class="form-control" id="description"
                         placeholder="Enter description here">
                 </div>
@@ -174,15 +176,21 @@
 
 
                 <button class="rat" type="submit" id="mouseover" onclick="consolevalue(event)">Submit</button>
-                <button class="rat" type="submit" id="update" onclick="updateData(event)">Update</button>
+                <button class="rat" type="submit" hidden id="update" onclick="updateData(event)">Update</button>
 
-                <ul id="some"></ul>
+                <button id="leadBoard" type="button" hidden class="btn btn-secondary"
+                    onclick="leadBoard(event)">LeadBoard</button>
+
+                <ul id="leadBoardDetails">
+                    <!-- <li class="tem">Name</li> -->
+                </ul>
             </form>
-            <button id="premium" type="button" class="btn btn-secondary" onclick="logOut(event)">Log out</button>
+
         </div>
         <div class="detailCon">
-
-            <h3>Expense Details</h3>
+            <button id="premium" type="button" class="btn btn-secondary" onclick="logOut(event)">Log out</button>
+            
+            <h4>Expense Details</h4>
             <hr>
             <ol id="details" class="list">
 
@@ -210,9 +218,9 @@
 
 <script>
 
-    function logOut(event){
+    function logOut(event) {
         localStorage.clear()
-        window.location.href="login.html"
+        window.location.href = "login.html"
     }
 
     // get data
@@ -223,12 +231,19 @@
             Updatebtn.hidden = true;
             let submitBtn = document.getElementById("mouseover");
             submitBtn.hidden = false;
-            // let userId = localStorage.getItem('userId')
+
+            let uName = document.getElementById('userName')
+
+            let leadBoard = document.getElementById('leadBoard');
+                leadBoard.hidden = true;
+
             let token = localStorage.getItem('token')
             console.log(token)
 
             const site = `http://localhost:4000/logIn/get-data`
             let res = await axios.get(site, { headers: { "Authorization": token } })
+
+            uName.innerHTML = res.data.user.name
 
             console.log(res.data.user.isPremium)
             if (res.data.user.isPremium == true) {
@@ -236,6 +251,8 @@
                 pbtn.hidden = true;
                 let ptag = document.getElementById('member');
                 ptag.hidden = false;
+                let leadBoard = document.getElementById('leadBoard');
+                leadBoard.hidden = false;
             }
             showOutputOfGet(res.data.userdetails);
         } catch (err) { console.log(err) }
@@ -290,6 +307,12 @@
 
             let res = await axios.post("http://localhost:4000/logIn/expense-data", obj, { headers: { "Authorization": token } })
 
+            // leadBoard(event)
+
+            if (res.data.user.isPremium == true) {
+              leadBoard(event)
+            }
+
             let exp = res.data.userdetails.expense
             let des = res.data.userdetails.description
             let cat = res.data.userdetails.category
@@ -320,6 +343,7 @@
         Updatebtn.hidden = true;
         let submitBtn = document.getElementById("mouseover");
         submitBtn.hidden = false;
+      
     }
 
     // for get response
@@ -355,7 +379,7 @@
             // let site
             let token = localStorage.getItem('token')
             let site = `http://localhost:4000/logIn/raat-data/${id}`
-            let res = await axios.get(site,{ headers: { "Authorization": token } })
+            let res = await axios.get(site, { headers: { "Authorization": token } })
             console.log(res.status)
             if (res.status === 201) {
                 getDetails()
@@ -379,7 +403,7 @@
             // let site
             let token = localStorage.getItem('token')
             let site = `http://localhost:4000/logIn/edit-data/${id}`
-            let res = await axios.get(site,{ headers: { "Authorization": token } })
+            let res = await axios.get(site, { headers: { "Authorization": token } })
             // console.log(res.data)
             getContent(res.data.userdetails[0], res.data.userdetails[0].id)
         } catch (err) { console.log(err) }
@@ -498,6 +522,65 @@
                 getDetails()
             } catch (err) { console.log(err) }
         })
+    }
+
+   
+
+    const element = document.getElementById('leadBoard');
+    element.addEventListener("click", leadBoard);
+
+    async function leadBoard(event) {
+        event.preventDefault();
+
+        let token = localStorage.getItem('token')
+        const site = `http://localhost:4000/premium/leadBoardDetails`
+        const res = await axios.get(site, { headers: { "Authorization": token } })
+
+        // console.log(res.data.user)
+        // console.log(res.data.udata)
+        let keys = []
+        let values = res.data.udata
+
+        let arr = res.data.user.forEach(ele => {
+            keys.push(ele.name)
+        })
+
+        console.log(keys)
+        console.log(values)
+
+
+        // creating object from two arrays
+        const obj = keys.reduce((acc, key, index) => {
+            acc[key] = values[index]
+            return acc
+        }, {})
+
+
+
+
+        const sortedOb = Object.entries(obj).sort((a, b) => b[1] - a[1]);
+
+        // console.log(sortedOb);
+
+        // let sortObj = obj.sort(function(a,b){return a.})
+        console.log("sorted" + typeof (sortedOb))
+
+        const leadBoardDetails = document.getElementById('leadBoardDetails');
+        leadBoardDetails.innerHTML = ""
+        for (let name in sortedOb) {
+            // console.log(name)
+            console.log(sortedOb[name][0])
+            const div = document.createElement('div');
+            div.innerHTML = `<li class="tem">${sortedOb[name][0]} - ${sortedOb[name][1]} Score </li>`
+
+            leadBoardDetails.append(div)
+        }
+
+        // name = ele.name
+
+        // leadBoardDetails.innerHTML = ""
+
+
     }
 
 </script>

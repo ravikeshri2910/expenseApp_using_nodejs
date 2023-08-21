@@ -18,7 +18,9 @@ exports.creatingExpense =  async(req, res)=>{
             sinupId:userId
         })
 
-        res.status(201).json({ userdetails : data})
+        let user = req.user
+
+        res.status(201).json({ userdetails : data,user : user})
 
     }catch(err){console.log(err)}
 }

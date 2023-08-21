@@ -10,6 +10,7 @@ const expenseRouter = require('./router/expenseDataRout')
 const userRouter = require('./router/userDataRout')
 const Order = require('./models/order')
 const purchaseRouter = require('./router/purchase')
+const premiumRouter = require('./router/premium')
 
 
 
@@ -35,6 +36,9 @@ app.use('/user', userRouter)
 
 //primum route
 app.use('/purchase',purchaseRouter)
+
+//Premium Feature
+app.use('/premium',premiumRouter)
 
 
 
