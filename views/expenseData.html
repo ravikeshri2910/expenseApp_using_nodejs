@@ -117,7 +117,6 @@
         #member {
             color: goldenrod;
         }
-       
     </style>
 </head>
 
@@ -141,7 +140,7 @@
 
                 <div class="form-group">
                     <label>Choose Expense Amount </label>
-                    <select class="form-control" id="expense"  >
+                    <select class="form-control" id="expense">
                         <option>100</option>
                         <option>200</option>
                         <option>300</option>
@@ -178,8 +177,7 @@
                 <button class="rat" type="submit" id="mouseover" onclick="consolevalue(event)">Submit</button>
                 <button class="rat" type="submit" hidden id="update" onclick="updateData(event)">Update</button>
 
-                <button id="leadBoard" type="button" hidden class="btn btn-secondary"
-                    onclick="leadBoard(event)">LeadBoard</button>
+                <button id="leadBoard" type="button" hidden class="btn btn-secondary">LeadBoard</button>
 
                 <ul id="leadBoardDetails">
                     <!-- <li class="tem">Name</li> -->
@@ -189,7 +187,7 @@
         </div>
         <div class="detailCon">
             <button id="premium" type="button" class="btn btn-secondary" onclick="logOut(event)">Log out</button>
-            
+
             <h4>Expense Details</h4>
             <hr>
             <ol id="details" class="list">
@@ -235,7 +233,7 @@
             let uName = document.getElementById('userName')
 
             let leadBoard = document.getElementById('leadBoard');
-                leadBoard.hidden = true;
+            leadBoard.hidden = true;
 
             let token = localStorage.getItem('token')
             console.log(token)
@@ -310,7 +308,7 @@
             // leadBoard(event)
 
             if (res.data.user.isPremium == true) {
-              leadBoard(event)
+                leadBoard(event)
             }
 
             let exp = res.data.userdetails.expense
@@ -343,7 +341,7 @@
         Updatebtn.hidden = true;
         let submitBtn = document.getElementById("mouseover");
         submitBtn.hidden = false;
-      
+
     }
 
     // for get response
@@ -500,14 +498,14 @@
                     getDetails()
                 }
             }
-        } catch (err) { console.log(err) }
+            // } catch (err) { console.log(err) }
 
-        const rzp1 = new Razorpay(options);
-        rzp1.open()
+            const rzp1 = new Razorpay(options);
+            rzp1.open()
 
-        rzp1.on('payment.failed', async function (response) {
+            rzp1.on('payment.failed', async function (response) {
 
-            try {
+                // try {
                 console.log(response.error.metadata)
 
                 const token = localStorage.getItem('token');
@@ -520,11 +518,11 @@
 
                 alert('Payment Failed')
                 getDetails()
-            } catch (err) { console.log(err) }
-        })
+            })
+        } catch (err) { console.log(err) }
     }
 
-   
+
 
     const element = document.getElementById('leadBoard');
     element.addEventListener("click", leadBoard);
@@ -536,52 +534,34 @@
         const site = `http://localhost:4000/premium/leadBoardDetails`
         const res = await axios.get(site, { headers: { "Authorization": token } })
 
-        // console.log(res.data.user)
-        // console.log(res.data.udata)
-        let keys = []
-        let values = res.data.udata
-
-        let arr = res.data.user.forEach(ele => {
-            keys.push(ele.name)
-        })
-
-        console.log(keys)
-        console.log(values)
-
-
-        // creating object from two arrays
-        const obj = keys.reduce((acc, key, index) => {
-            acc[key] = values[index]
-            return acc
-        }, {})
-
-
-
-
-        const sortedOb = Object.entries(obj).sort((a, b) => b[1] - a[1]);
-
-        // console.log(sortedOb);
-
-        // let sortObj = obj.sort(function(a,b){return a.})
-        console.log("sorted" + typeof (sortedOb))
-
+        
         const leadBoardDetails = document.getElementById('leadBoardDetails');
         leadBoardDetails.innerHTML = ""
-        for (let name in sortedOb) {
-            // console.log(name)
-            console.log(sortedOb[name][0])
-            const div = document.createElement('div');
-            div.innerHTML = `<li class="tem">${sortedOb[name][0]} - ${sortedOb[name][1]} Score </li>`
+        
+        console.log(leadBoardDetails)
+        let arr = res.data.udata
 
+        arr.forEach((ele)=>{
+            console.log(ele.name)
+            
+
+            const div = document.createElement('div');
+
+            div.innerHTML = `<li class="tem">${ele.name} - ${ele.total_cost} Score </li>`
+    
             leadBoardDetails.append(div)
-        }
+        })
+
+
+      
 
         // name = ele.name
 
         // leadBoardDetails.innerHTML = ""
-
-
     }
+
+
+
 
 </script>
 
