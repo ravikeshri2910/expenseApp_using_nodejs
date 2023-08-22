@@ -236,14 +236,14 @@
             leadBoard.hidden = true;
 
             let token = localStorage.getItem('token')
-            console.log(token)
+            // console.log(token)
 
             const site = `http://localhost:4000/logIn/get-data`
             let res = await axios.get(site, { headers: { "Authorization": token } })
 
             uName.innerHTML = res.data.user.name
 
-            console.log(res.data.user.isPremium)
+            // console.log(res.data.user.isPremium)
             if (res.data.user.isPremium == true) {
                 // leadBoard()
                 let pbtn = document.getElementById('premium');
@@ -380,7 +380,7 @@
             let token = localStorage.getItem('token')
             let site = `http://localhost:4000/logIn/raat-data/${id}`
             let res = await axios.get(site, { headers: { "Authorization": token } })
-            console.log(res.status)
+            // console.log(res.status)
             if (res.status === 201) {
                 getDetails()
             }
@@ -399,7 +399,7 @@
 
 
             event.preventDefault();
-            console.log(id)
+            // console.log(id)
             // let site
             let token = localStorage.getItem('token')
             let site = `http://localhost:4000/logIn/edit-data/${id}`
@@ -469,7 +469,7 @@
             let submitBtn = document.getElementById("mouseover");
             submitBtn.hidden = false;
 
-            console.log("update")
+            // console.log("update")
         } catch (err) { console.log(err) }
     }
 
@@ -482,7 +482,7 @@
             const site = `http://localhost:4000/purchase/premiummembership`
             const response = await axios.get(site, { headers: { "Authorization": token } })
 
-            console.log(response)
+            // console.log(response)
 
             const options = {
                 "key": response.data.key_id,// Enter the key id genetated from dashboard
@@ -508,7 +508,7 @@
             rzp1.on('payment.failed', async function (response) {
 
                 // try {
-                console.log(response.error.metadata)
+                // console.log(response.error.metadata)
 
                 const token = localStorage.getItem('token');
                 await axios.post('http://localhost:4000/purchase/failed/updatetransactionstatus', {

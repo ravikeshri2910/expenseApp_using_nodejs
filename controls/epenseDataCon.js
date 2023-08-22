@@ -1,13 +1,15 @@
 const expenseData =  require('../models/expenseData');
 
-const bodyParser= require('body-parser')
+const bodyParser= require('body-parser');
+const sequelize = require('../utill/database');
 
 
 exports.creatingExpense =  async(req, res)=>{
+    const t = await sequelize.transaction()
     try{
         const userId = req.user.id
         // const userId = req.user.createExpenseData
-        console.log('req.user>>>>'+(userId))
+        // console.log('req.user>>>>'+(userId))
         // const userId = req.user.id
         const{expense,description,category}=req.body
 
@@ -16,20 +18,23 @@ exports.creatingExpense =  async(req, res)=>{
             description : description,
             category : category,
             sinupId:userId
-        })
+        },{transaction : t})
 
         let user = req.user
         
         const tExpense = req.user.totalExpense + +expense
-        console.log('totalexpense '+tExpense)
-
-        await req.user.update({totalExpense : tExpense})
-
+        // console.log('totalexpense '+tExpense)
+        await req.user.update({totalExpense : tExpense},{transaction:t})
+        
         // await req.user.update({totalExpense : tExpense})
-
+        await t.commit()
+        
         res.status(201).json({ userdetails : data, user : user})
 
-    }catch(err){console.log(err)}
+    }catch(err){
+        await t.rollback()
+        console.log(err)
+    }
 }
 
 exports.gettinAllData = async(req, res)=>{
@@ -48,23 +53,28 @@ exports.gettinAllData = async(req, res)=>{
 }
 
 exports.deleteData = async(req,res)=>{
+    const t = await sequelize.transaction()
     try{
         let deleteId = req.params.id;
         let field = await expenseData.findByPk(deleteId)
 
         const tExpense = req.user.totalExpense - +(field.expense)
-        console.log('totalexpense '+ tExpense)
+        // console.log('totalexpense '+ tExpense)
 
-        await req.user.update({totalExpense : tExpense})
+        await req.user.update({totalExpense : tExpense},{transaction:t})
 
         // console.log(req.user)
-        let data = await expenseData.destroy({where : {id :(+deleteId)}})
+        let data = await expenseData.destroy({where : {id :(+deleteId)}},{transaction:t})
 
 
-        console.log(field)
+        // console.log(field)
+        await t.commit()
         res.status(201).json({ userdetails: field })
         // res.redirect('/user/get-data')
-    }catch(err){console.log(err)}
+    }catch(err){
+        await t.rollback()
+        console.log(err)
+    }
 }
 
 exports.editingData = async(req,res)=>{
@@ -78,36 +88,40 @@ exports.editingData = async(req,res)=>{
 }
 
 exports.updateData = async(req,res)=>{
+    const t = await sequelize.transaction()
     try{
         let dataId = req.body.id;
         let updatedExpense = req.body.updatedExpense;
         let updatedDescription = req.body.updatedDescription;
         let updatecatagory = req.body.updatecatagory;
 
-        console.log(req.user)
+        // console.log(req.user)
     
         // console.log(updatecatagory)
     
     
         let updatedData  = await expenseData.findAll({where : { id : (+dataId)}})
         
-        console.log(updatedData[0].expense)
+        // console.log(updatedData[0].expense)
 
-        let value = +(updatedData[0].expense) - +(updatedExpense) 
+        let value = +(updatedExpense)- +(updatedData[0].expense)  
 
-        const tExpense = req.user.totalExpense - +(value)
-        console.log('totalexpense '+ tExpense)
+        const tExpense = req.user.totalExpense + +(value)
+        // console.log('totalexpense '+ tExpense)
 
-        await req.user.update({totalExpense : tExpense})
+        await req.user.update({totalExpense : tExpense},{transaction:t})
     
        
         updatedData[0].expense = updatedExpense,
         updatedData[0].description = updatedDescription,
         updatedData[0].category = updatecatagory
         
-        await updatedData[0].save()
-    
+        await updatedData[0].save({transaction:t})
+        await t.commit()
         res.status(201).json({msg:'Updated'})
     
-    }catch(err){console.log(err)}
+    }catch(err){
+        await t.rollback()
+        console.log(err)
+    }
 }
