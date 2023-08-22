@@ -4,8 +4,8 @@ const bodyParser = require('body-parser')
 
 
 const sequelize = require('./utill/database');
-const sinUp = require('./models/userSinup')
-const expenseData = require('./models/expenseData');
+const SinUp = require('./models/userSinup')
+const ExpenseData = require('./models/expenseData');
 const expenseRouter = require('./router/expenseDataRout')
 const userRouter = require('./router/userDataRout')
 const Order = require('./models/order')
@@ -19,15 +19,15 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Association
-sinUp.hasMany(expenseData)
-expenseData.belongsTo(sinUp)
+SinUp.hasMany(ExpenseData)
+ExpenseData.belongsTo(SinUp)
 
-sinUp.hasMany(Order);
-Order.belongsTo(sinUp)
+SinUp.hasMany(Order);
+Order.belongsTo(SinUp)
 
 
 // creating expense
-app.use('/logIn',expenseRouter)
+app.use('/logIn', expenseRouter)
 
 
 //sinup and login data
@@ -35,10 +35,10 @@ app.use('/user', userRouter)
 
 
 //primum route
-app.use('/purchase',purchaseRouter)
+app.use('/purchase', purchaseRouter)
 
 //Premium Feature
-app.use('/premium',premiumRouter)
+app.use('/premium', premiumRouter)
 
 
 

@@ -4,7 +4,7 @@ const authorization = require('../middleWare/auth')
 
 const router = express.Router();
 
-router.get('/leadBoardDetails',premiumControl.leadboardDetails)
+router.get('/leadBoardDetails',authorization.authenticateAddExpense ,premiumControl.leadboardDetails)
 
 
 

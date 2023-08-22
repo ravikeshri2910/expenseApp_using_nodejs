@@ -17,7 +17,7 @@ router.get('/raat-data/:id',authorization.authenticate, expenseDataCon.deleteDat
 router.get('/edit-data/:id',authorization.authenticate,expenseDataCon.editingData)
 
 // updating data
-router.post('/updated-data', expenseDataCon.updateData)
+router.post('/updated-data',authorization.authenticate, expenseDataCon.updateData)
 
 
 

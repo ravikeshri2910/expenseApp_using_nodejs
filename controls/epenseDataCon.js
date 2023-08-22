@@ -19,8 +19,15 @@ exports.creatingExpense =  async(req, res)=>{
         })
 
         let user = req.user
+        
+        const tExpense = req.user.totalExpense + +expense
+        console.log('totalexpense '+tExpense)
 
-        res.status(201).json({ userdetails : data,user : user})
+        await req.user.update({totalExpense : tExpense})
+
+        // await req.user.update({totalExpense : tExpense})
+
+        res.status(201).json({ userdetails : data, user : user})
 
     }catch(err){console.log(err)}
 }
@@ -43,9 +50,19 @@ exports.gettinAllData = async(req, res)=>{
 exports.deleteData = async(req,res)=>{
     try{
         let deleteId = req.params.id;
+        let field = await expenseData.findByPk(deleteId)
+
+        const tExpense = req.user.totalExpense - +(field.expense)
+        console.log('totalexpense '+ tExpense)
+
+        await req.user.update({totalExpense : tExpense})
+
+        // console.log(req.user)
         let data = await expenseData.destroy({where : {id :(+deleteId)}})
-        // console.log('deleteId')
-        res.status(201).json({ userdetails: data })
+
+
+        console.log(field)
+        res.status(201).json({ userdetails: field })
         // res.redirect('/user/get-data')
     }catch(err){console.log(err)}
 }
@@ -66,13 +83,22 @@ exports.updateData = async(req,res)=>{
         let updatedExpense = req.body.updatedExpense;
         let updatedDescription = req.body.updatedDescription;
         let updatecatagory = req.body.updatecatagory;
+
+        console.log(req.user)
     
-        console.log(updatecatagory)
+        // console.log(updatecatagory)
     
     
         let updatedData  = await expenseData.findAll({where : { id : (+dataId)}})
         
-        console.log(updatedData[0].id)
+        console.log(updatedData[0].expense)
+
+        let value = +(updatedData[0].expense) - +(updatedExpense) 
+
+        const tExpense = req.user.totalExpense - +(value)
+        console.log('totalexpense '+ tExpense)
+
+        await req.user.update({totalExpense : tExpense})
     
        
         updatedData[0].expense = updatedExpense,

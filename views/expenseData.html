@@ -245,12 +245,14 @@
 
             console.log(res.data.user.isPremium)
             if (res.data.user.isPremium == true) {
+                // leadBoard()
                 let pbtn = document.getElementById('premium');
                 pbtn.hidden = true;
                 let ptag = document.getElementById('member');
                 ptag.hidden = false;
                 let leadBoard = document.getElementById('leadBoard');
                 leadBoard.hidden = false;
+                // leadBoard() 
             }
             showOutputOfGet(res.data.userdetails);
         } catch (err) { console.log(err) }
@@ -450,10 +452,10 @@
             }
 
             // console.log(obj)
-            console.log("here")
+            let token = localStorage.getItem('token')
             let site = `http://localhost:4000/logIn/updated-data`
 
-            let res = await axios.post(site, obj)
+            let res = await axios.post(site, obj, { headers: { "Authorization": token } })
 
             // console.log(res.status)
             getDetails()
@@ -527,8 +529,8 @@
     const element = document.getElementById('leadBoard');
     element.addEventListener("click", leadBoard);
 
-    async function leadBoard(event) {
-        event.preventDefault();
+    async function leadBoard() {
+        // event.preventDefault();
 
         let token = localStorage.getItem('token')
         const site = `http://localhost:4000/premium/leadBoardDetails`
@@ -538,26 +540,24 @@
         const leadBoardDetails = document.getElementById('leadBoardDetails');
         leadBoardDetails.innerHTML = ""
         
-        console.log(leadBoardDetails)
+        // console.log(res)
         let arr = res.data.udata
 
         arr.forEach((ele)=>{
-            console.log(ele.name)
+            // console.log(ele.name)
             
+            if(ele.totalExpense === null){
+                ele.totalExpense = 0
+            }
 
             const div = document.createElement('div');
 
-            div.innerHTML = `<li class="tem">${ele.name} - ${ele.total_cost} Score </li>`
+            div.innerHTML = `<li class="tem">${ele.name} - ${ele.totalExpense} Score </li>`
     
             leadBoardDetails.append(div)
         })
 
 
-      
-
-        // name = ele.name
-
-        // leadBoardDetails.innerHTML = ""
     }
 
 

@@ -17,6 +17,7 @@ const sinups = sequelize.define('sinups',{
     },
     passWord : Sequelize.STRING,
     isPremium : Sequelize.BOOLEAN,
+    totalExpense : Sequelize.INTEGER
 });
 
 module.exports = sinups;
