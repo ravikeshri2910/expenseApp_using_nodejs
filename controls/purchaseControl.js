@@ -2,8 +2,7 @@
 
 const Order = require('../models/order');
 const Razorpay = require('razorpay')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+
 
 exports.purchasepremium = async (req,res)=>{
     try{
