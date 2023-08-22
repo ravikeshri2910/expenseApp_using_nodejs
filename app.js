@@ -11,6 +11,7 @@ const userRouter = require('./router/userDataRout')
 const Order = require('./models/order')
 const purchaseRouter = require('./router/purchase')
 const premiumRouter = require('./router/premium')
+const passwordRouter = require('./router/forgetPassword')
 
 
 
@@ -40,7 +41,8 @@ app.use('/purchase', purchaseRouter)
 //Premium Feature
 app.use('/premium', premiumRouter)
 
-
+// forget password
+app.use('/password', passwordRouter)
 
 
 

@@ -1,6 +1,5 @@
 const expenseData =  require('../models/expenseData');
 
-const bodyParser= require('body-parser');
 const sequelize = require('../utill/database');
 
 
