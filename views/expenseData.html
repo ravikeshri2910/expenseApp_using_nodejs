@@ -178,6 +178,7 @@
                 <button class="rat" type="submit" hidden id="update" onclick="updateData(event)">Update</button>
 
                 <button id="leadBoard" type="button" hidden class="btn btn-secondary">LeadBoard</button>
+                <button onclick="download()" id="downloadexpense" hidden class="btn btn-secondary">Download File</button>
 
                 <ul id="leadBoardDetails">
                     <!-- <li class="tem">Name</li> -->
@@ -229,6 +230,8 @@
             Updatebtn.hidden = true;
             let submitBtn = document.getElementById("mouseover");
             submitBtn.hidden = false;
+            let downloadexpense = document.getElementById("downloadexpense");
+            downloadexpense.hidden = true;
 
             let uName = document.getElementById('userName')
 
@@ -252,6 +255,8 @@
                 ptag.hidden = false;
                 let leadBoard = document.getElementById('leadBoard');
                 leadBoard.hidden = false;
+                let downloadexpense = document.getElementById("downloadexpense");
+            downloadexpense.hidden = false;
                 // leadBoard() 
             }
             showOutputOfGet(res.data.userdetails);
@@ -557,6 +562,15 @@
             leadBoardDetails.append(div)
         })
 
+
+    }
+
+    async function download(){
+
+        let token = localStorage.getItem('token')
+        const site = `http://localhost:4000/user/download`
+        const res = await axios.get(site, { headers: { "Authorization": token } })
+        console.log(res)
 
     }
 

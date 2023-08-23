@@ -71,3 +71,10 @@ exports.loginRoute = async (req, res) => {
         }
     }
 }
+
+
+exports.download = async(req,res)=>{
+
+
+    res.status(201).json({msg : 'File downloaded'})
+}
