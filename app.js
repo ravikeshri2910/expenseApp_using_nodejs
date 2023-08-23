@@ -12,6 +12,7 @@ const Order = require('./models/order')
 const purchaseRouter = require('./router/purchase')
 const premiumRouter = require('./router/premium')
 const passwordRouter = require('./router/forgetPassword')
+const Forgetpassword = require('./models/forgetPassRequest')
 
 
 
@@ -25,6 +26,9 @@ ExpenseData.belongsTo(SinUp)
 
 SinUp.hasMany(Order);
 Order.belongsTo(SinUp)
+
+SinUp.hasMany(Forgetpassword)
+Forgetpassword.belongsTo(SinUp)
 
 
 // creating expense
