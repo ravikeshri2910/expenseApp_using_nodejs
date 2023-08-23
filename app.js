@@ -48,6 +48,7 @@ app.use('/premium', premiumRouter)
 // forget password
 app.use('/password', passwordRouter)
 
+// http://localhost:4000/password/resetpassword
 
 
 sequelize

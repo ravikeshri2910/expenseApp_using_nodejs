@@ -19,7 +19,7 @@ exports.forgetPassword = async (req, res) => {
         const user = await SinUp.findOne({ where: { email: email } })
 
         if (user) {
-            console.log(user)
+            // console.log(user)
 
             const id = uuid.v4();
 
@@ -53,10 +53,10 @@ exports.forgetPassword = async (req, res) => {
                 sinupId: user.id
             })
 
-            console.log('forgetPasss')
+            // console.log('forgetPasss')
 
 
-            console.log(email)
+            // console.log(email)
 
             res.status(201).json({ msg: 'Email sent' })
         } else {
@@ -73,14 +73,14 @@ exports.resetPassword = async (req, res) => {
 
         let forgetRequest = await ForgetPasswordtable.findOne({ where: { id: id } })
 
+        if (forgetRequest) {
+            // console.log('forgetRequest')
 
-        console.log('forgetRequest')
+            // await forgetRequest.update({ isActive: false })
 
-        await forgetRequest.update({ isActive: false })
+            res.status(200).send(
 
-        res.status(200).send(
-
-            `<!DOCTYPE html>
+                `<!DOCTYPE html>
             <html lang="en">
             <head>
                 <meta charset="UTF-8">
@@ -113,15 +113,16 @@ exports.resetPassword = async (req, res) => {
             
                     const res = await axios.post("http://localhost:4000/password/updatePassword/${id}",obj)
             
-                    console.log(res)
+                    // console.log(res)
 
                     alert(res.data.msg)
-                window.location.href="login.html"
+               
             
                 }
             </script>
             </html>`
-        )
+            )
+        }
         res.end()
 
 
@@ -137,9 +138,13 @@ exports.updatePassword = async (req, res) => {
 
         const newPassword = req.body.npassword
 
-        console.log(newPassword, id)
+        // console.log(newPassword, id)
 
         let forgetTable = await ForgetPasswordtable.findOne({ where: { id: id } })
+
+        if (forgetTable.isActive === false) {
+            return res.status(201).json({ msg: 'Link expired' })
+        }
 
         let user = await SinUp.findOne({ where: { id: forgetTable.sinupId } })
 
@@ -149,8 +154,10 @@ exports.updatePassword = async (req, res) => {
             await user.update({
                 passWord: hash
             })
-            res.status(201).json({ msg: 'Updated new password' })
         })
+
+        await forgetTable.update({ isActive: false })
+        res.status(201).json({ msg: 'Updated new password' })
 
     } catch (err) { console.log(err) }
 
