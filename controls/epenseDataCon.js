@@ -41,9 +41,10 @@ exports.gettinAllData = async(req, res)=>{
         // console.log('here')
         const userId = req.user.id
         const page = +req.params.page || 1
-        console.log('page ...'+ page)
+        const pageLimit = +req.params.pageLimit || 2
+        console.log('pageLimit ...'+ pageLimit)
 
-        let limit = 2;
+        let limit = pageLimit;
         let offset = 0 + (page -1) * limit;
         let totalItem;
    

@@ -118,6 +118,10 @@
         #member {
             color: goldenrod;
         }
+        #pagination{
+            display: flex;
+            padding: 20px;
+        }
     </style>
 </head>
 
@@ -198,9 +202,18 @@
             <ol id="details" class="list">
 
             </ol>
-
-            <div id="pages">
-
+            <div id="pagination">
+                <div id="pages"></div>
+                <div class="form-group" >
+                    <select class="form-control" id="pageLimit">
+                        <option>2</option>
+                        <option>4</option>
+                        <option>6</option>
+                        <option>8</option>
+                        <option>10</option>
+                    </select>
+                </div>
+                <button id="premium" type="button" class="btn btn-secondary" onclick="getDetails(event)">Ok</button>
             </div>
 
         </div>
@@ -271,7 +284,6 @@
         } catch (err) { console.log(err) }
     }
 
-
     // get data
     async function getDetails(page) {
         // console.log("here")
@@ -287,15 +299,18 @@
 
             let leadBoard = document.getElementById('leadBoard');
             leadBoard.hidden = true;
-
+            
+            let pageLimit = document.getElementById('pageLimit').value
             // console.log(token)
 
 
-            const site = `http://localhost:4000/logIn/get-data/${page}`
+            const site = `http://localhost:4000/logIn/get-data/${page}/${pageLimit}`
 
             let token = localStorage.getItem('token')
             let res = await axios.get(site, { headers: { "Authorization": token } })
-            console.log(res)
+            // console.log(res)
+
+            document.getElementById('pageLimit').value = pageLimit
 
             uName.innerHTML = res.data.user.name
 
@@ -319,7 +334,7 @@
     // console.log(res)data.
 
 
-    getDetails()
+    getDetails(1,2)
 
     function pagination(data) {
         const pages = document.getElementById('pages')
@@ -331,9 +346,10 @@
             btn2.addEventListener('click', () => getDetails(data.previosPage));
             pages.appendChild(btn2)
         }
-        
+
         const btn1 = document.createElement('button');
         btn1.innerHTML = `<h4>${data.currentPage}</h4>`;
+        btn1.style.color = 'red'
         btn1.addEventListener('click', () => getDetails(data.currentPage));
         pages.appendChild(btn1)
 
