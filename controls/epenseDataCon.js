@@ -38,15 +38,37 @@ exports.creatingExpense =  async(req, res)=>{
 
 exports.gettinAllData = async(req, res)=>{
     try{
-        console.log('here')
+        // console.log('here')
         const userId = req.user.id
-        console.log('userId ...'+ userId)
+        const page = +req.params.page || 1
+        console.log('page ...'+ page)
+
+        let limit = 2;
+        let offset = 0 + (page -1) * limit;
+        let totalItem;
    
-        let data = await expenseData.findAll({where:{sinupId : userId}})
-        // console.log(data)
+        let data = await expenseData.findAndCountAll({
+            where:{sinupId : userId},
+            offset : offset,
+            limit : limit
+        })
+
+        totalItem = data.count
+        // console.log(totalItem)
         // res.locals.user = req.user
         let user = req.user
-        res.status(201).json({ userdetails: data , user : user})
+        res.status(201).json({
+             userdetails: data ,
+              user : user,
+              //pagiantion
+              currentPage : page,
+              hasNextPage : limit * page < totalItem,
+              nextPage : page + 1,
+              hasPeriviosPage : page > 1,
+              previosPage : page -1 ,
+              lastPage : Math.ceil(totalItem/limit)
+
+            })
 
     }catch(err){console.log(err)}
 }

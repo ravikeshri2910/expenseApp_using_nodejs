@@ -67,6 +67,7 @@
 
         #details {
             width: 100%;
+            height: 350px;
             /* margin-left: 30%; */
         }
 
@@ -88,7 +89,7 @@
             width: 50%;
             background-color: white;
             border: 5px solid rgb(0, 157, 255);
-            height: 700px;
+            height: 450px;
             margin-right: 15px;
 
 
@@ -197,10 +198,15 @@
             <ol id="details" class="list">
 
             </ol>
+
+            <div id="pages">
+
+            </div>
+
         </div>
     </div>
 
-    <a href=""></a>
+
 
 
 
@@ -253,7 +259,7 @@
                     // if (ele.totalExpense === null) {
                     //     ele.totalExpense = 0
                     // }
-                    
+
 
                     const div = document.createElement('div');
 
@@ -265,8 +271,9 @@
         } catch (err) { console.log(err) }
     }
 
+
     // get data
-    async function getDetails() {
+    async function getDetails(page) {
         // console.log("here")
         try {
             let Updatebtn = document.getElementById("update");
@@ -281,11 +288,14 @@
             let leadBoard = document.getElementById('leadBoard');
             leadBoard.hidden = true;
 
-            let token = localStorage.getItem('token')
             // console.log(token)
 
-            const site = `http://localhost:4000/logIn/get-data`
+
+            const site = `http://localhost:4000/logIn/get-data/${page}`
+
+            let token = localStorage.getItem('token')
             let res = await axios.get(site, { headers: { "Authorization": token } })
+            console.log(res)
 
             uName.innerHTML = res.data.user.name
 
@@ -302,13 +312,38 @@
                 downloadexpense.hidden = false;
                 // leadBoard() 
             }
-            showOutputOfGet(res.data.userdetails);
+            pagination(res.data)
+            showOutputOfGet(res.data.userdetails.rows);
         } catch (err) { console.log(err) }
     }
-    // console.log(res)
+    // console.log(res)data.
 
 
     getDetails()
+
+    function pagination(data) {
+        const pages = document.getElementById('pages')
+        pages.innerHTML = ""
+
+        if (data.hasPeriviosPage) {
+            const btn2 = document.createElement('button');
+            btn2.innerHTML = `<h4>${data.previosPage}</h4>`;
+            btn2.addEventListener('click', () => getDetails(data.previosPage));
+            pages.appendChild(btn2)
+        }
+        
+        const btn1 = document.createElement('button');
+        btn1.innerHTML = `<h4>${data.currentPage}</h4>`;
+        btn1.addEventListener('click', () => getDetails(data.currentPage));
+        pages.appendChild(btn1)
+
+        if (data.hasNextPage) {
+            const btn3 = document.createElement('button');
+            btn3.innerHTML = `<h4>${data.nextPage}</h4>`;
+            btn3.addEventListener('click', () => getDetails(data.nextPage));
+            pages.appendChild(btn3)
+        }
+    }
 
 
 

@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/expense-data',authorization.authenticateAddExpense,expenseDataCon.creatingExpense)
 
 //geting all data after login
-router.get('/get-data',authorization.authenticate, expenseDataCon.gettinAllData)
+router.get('/get-data/:page',authorization.authenticate, expenseDataCon.gettinAllData)
 
 // deleting expense
 router.get('/raat-data/:id',authorization.authenticate, expenseDataCon.deleteData)
