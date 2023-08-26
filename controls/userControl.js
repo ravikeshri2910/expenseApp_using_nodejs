@@ -1,8 +1,14 @@
-const sinUp = require('../models/userSinup');
-
-
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const AWS = require('aws-sdk')
+
+
+const sinUp = require('../models/userSinup');
+const Expenses = require('../models/expenseData');
+const Download = require('../models/downloadData')
+
+
+
 
 
 exports.sinUpRoute = async (req, res, next) => {
@@ -39,9 +45,9 @@ exports.sinUpRoute = async (req, res, next) => {
 }
 
 
-function generateWebToken(id){
-    return jwt.sign({userId : id},'849448481huhfwufheuyh15418549874ewjhbdweudbweub')
- }
+function generateWebToken(id) {
+    return jwt.sign({ userId: id }, '849448481huhfwufheuyh15418549874ewjhbdweudbweub')
+}
 
 exports.loginRoute = async (req, res) => {
     try {
@@ -50,16 +56,16 @@ exports.loginRoute = async (req, res) => {
 
         const user = await sinUp.findAll({ where: { email: logInemail } })
 
-        console.log('id+'+user[0].id)
-        
-        bcrypt.compare(logInPassword,user[0].passWord,(err, result)=>{
-            if(err){
+        console.log('id+' + user[0].id)
+
+        bcrypt.compare(logInPassword, user[0].passWord, (err, result) => {
+            if (err) {
                 res.status(500).json({ msg: 'Something is wrong' })
             }
-            if(result==true){
-                res.status(201).json({ userdetails: user, token : generateWebToken(user[0].id) })
-            }else{
-                res.status(401).json({ msg: 'Incorrect Password' }) 
+            if (result == true) {
+                res.status(201).json({ userdetails: user, token: generateWebToken(user[0].id) })
+            } else {
+                res.status(401).json({ msg: 'Incorrect Password' })
             }
         })
 
@@ -73,8 +79,76 @@ exports.loginRoute = async (req, res) => {
 }
 
 
-exports.download = async(req,res)=>{
+exports.download = async (req, res) => {
+
+    const id = req.user.id
+
+    const expenses = await Expenses.findAll({
+        where: { sinupId: id },
+        attributes: ['expense', 'description']
+    });
+
+    // console.log(expenses)
+
+    const stringyFiedExpense = JSON.stringify(expenses);
+
+    let today = new Date();
+    let date = today.getDate()
+    let sec = today.getSeconds()
+
+    const fileName = `Expense${req.user.id}.txt/${date}/${sec}`;
+    // const fileName = 'Expense.txt';
+
+    const fileUrl = await uploadToS3(stringyFiedExpense, fileName)
+
+    await Download.create({
+        filename: fileName,
+        url: fileUrl.Location,
+        sinupId: id
+    })
+
+    let down = await Download.findAll({
+        where: { sinupId: id },
+        attributes : ['filename', 'url']
+    })
 
 
-    res.status(201).json({msg : 'File downloaded'})
+    res.status(201).json({ msg: 'File downloaded', fileUrl,down, succes: true })
+    // res.status(201).json({msg : 'File downloaded'})
 }
+
+function uploadToS3(data, fileName) {
+
+    const BUCKET_NAME = 'newexpence2910'; // bucket name
+    const IAM_USER_KEY = 'AKIAZ35MELEAHC6AWW7C'; //id created in Security credentilas
+    const IAM_USER_SECRET = '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'; //Password created in Security credentilas
+
+    let s3bucket = new AWS.S3({
+        accessKeyId: IAM_USER_KEY,
+        secretAccessKey: IAM_USER_SECRET,
+
+    })
+
+    let params = {
+        Bucket: BUCKET_NAME,
+        Key: fileName,
+        Body: data,
+        ACL: 'public-read'
+    }
+
+    return new Promise((resolve, reject) => {
+
+        s3bucket.upload(params, (err, s3response) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            } else {
+                console.log('Success', s3response)
+                resolve(s3response)
+            }
+        })
+    })
+
+
+}
+

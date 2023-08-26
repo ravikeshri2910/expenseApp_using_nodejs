@@ -178,7 +178,10 @@
                 <button class="rat" type="submit" hidden id="update" onclick="updateData(event)">Update</button>
 
                 <button id="leadBoard" type="button" hidden class="btn btn-secondary">LeadBoard</button>
-                <button onclick="download()" id="downloadexpense" hidden class="btn btn-secondary">Download File</button>
+
+
+                <button onclick="download()" id="downloadexpense" hidden class="btn btn-secondary">Download
+                    File</button>
 
                 <ul id="leadBoardDetails">
                     <!-- <li class="tem">Name</li> -->
@@ -196,6 +199,8 @@
             </ol>
         </div>
     </div>
+
+    <a href=""></a>
 
 
 
@@ -220,6 +225,44 @@
     function logOut(event) {
         localStorage.clear()
         window.location.href = "login.html"
+    }
+
+    async function download() {
+        try {
+            let token = localStorage.getItem('token')
+            const site = `http://localhost:4000/user/download`
+            const res = await axios.get(site, { headers: { "Authorization": token } })
+            console.log(res)
+
+            if (res.status == 201) {
+                console.log('here')
+                let a = document.createElement("a");
+                a.href = res.data.fileUrl.Location;
+                a.download = 'Expense.csv';
+                a.click()
+
+                const leadBoardDetails = document.getElementById('leadBoardDetails');
+                leadBoardDetails.innerHTML = ""
+
+                // console.log(res)
+                let arr = res.data.down
+
+                arr.forEach((ele) => {
+                    // console.log(ele.name)
+
+                    // if (ele.totalExpense === null) {
+                    //     ele.totalExpense = 0
+                    // }
+                    
+
+                    const div = document.createElement('div');
+
+                    div.innerHTML = `<li class="tem">${ele.filename} - <a href="${ele.url}">Download</a>   </li>`
+
+                    leadBoardDetails.append(div)
+                })
+            }
+        } catch (err) { console.log(err) }
     }
 
     // get data
@@ -256,7 +299,7 @@
                 let leadBoard = document.getElementById('leadBoard');
                 leadBoard.hidden = false;
                 let downloadexpense = document.getElementById("downloadexpense");
-            downloadexpense.hidden = false;
+                downloadexpense.hidden = false;
                 // leadBoard() 
             }
             showOutputOfGet(res.data.userdetails);
@@ -541,38 +584,31 @@
         const site = `http://localhost:4000/premium/leadBoardDetails`
         const res = await axios.get(site, { headers: { "Authorization": token } })
 
-        
+
         const leadBoardDetails = document.getElementById('leadBoardDetails');
         leadBoardDetails.innerHTML = ""
-        
+
         // console.log(res)
         let arr = res.data.udata
 
-        arr.forEach((ele)=>{
+        arr.forEach((ele) => {
             // console.log(ele.name)
-            
-            if(ele.totalExpense === null){
+
+            if (ele.totalExpense === null) {
                 ele.totalExpense = 0
             }
 
             const div = document.createElement('div');
 
             div.innerHTML = `<li class="tem">${ele.name} - ${ele.totalExpense} Score </li>`
-    
+
             leadBoardDetails.append(div)
         })
 
 
     }
 
-    async function download(){
 
-        let token = localStorage.getItem('token')
-        const site = `http://localhost:4000/user/download`
-        const res = await axios.get(site, { headers: { "Authorization": token } })
-        console.log(res)
-
-    }
 
 
 

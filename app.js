@@ -13,6 +13,7 @@ const purchaseRouter = require('./router/purchase')
 const premiumRouter = require('./router/premium')
 const passwordRouter = require('./router/forgetPassword')
 const Forgetpassword = require('./models/forgetPassRequest')
+const Download = require('./models/downloadData')
 
 
 
@@ -29,6 +30,9 @@ Order.belongsTo(SinUp)
 
 SinUp.hasMany(Forgetpassword)
 Forgetpassword.belongsTo(SinUp)
+
+SinUp.hasMany(Download);
+Download.belongsTo(SinUp)
 
 
 // creating expense

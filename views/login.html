@@ -126,10 +126,12 @@
         #buttons {
             display: flex;
         }
-        a{
+
+        a {
             color: white
         }
-        #forget{
+
+        #forget {
             margin-left: 30%;
             color: blue;
         }
@@ -153,7 +155,7 @@
         <div id="sinUpForm">
             <h3>Log In Here</h3>
             <form>
-               
+
                 <div class="form-group">
                     <label for="formGroupExampleInput2">Email</label>
                     <input type="text" class="form-control" id="email" placeholder="Enter your email">
@@ -168,7 +170,7 @@
                         <a href="./signUp.html">Sin Up</a>
                     </button>
 
-                    <input id="login" class="btn btn-primary" type="submit" value="Log in"  onclick="logInData(event)">
+                    <input id="login" class="btn btn-primary" type="submit" value="Log in" onclick="logInData(event)">
                 </div>
                 <a href="./forgetPassword.html" id="forget">forget password</a>
             </form>
@@ -198,15 +200,15 @@
             event.preventDefault()
             console.log("here")
 
-          
+
             let email = document.getElementById('email')
             let password = document.getElementById('password')
 
-            if(!email.value || !password.value){
+            if (!email.value || !password.value) {
                 return alert('Fill the form properly')
             }
             let logInData = {
-                
+
                 email: email.value,
                 password: password.value
             }
@@ -216,29 +218,29 @@
 
             let res = await axios.post("http://localhost:4000/user/expense-login-data", logInData)
 
-        
+
             email.value = ""
             password.value = ""
 
-            
-            if(res.status == 201){
+
+            if (res.status == 201) {
                 // console.log(res.data)
                 // alert("login succesfully")
                 // localStorage.setItem('userId',res.data.userdetails[0].id)
-                localStorage.setItem('token',res.data.token)
+                localStorage.setItem('token', res.data.token)
                 // console.log(res.data.userdetails[0].id)
                 // console.log(res.data)
-                window.location.href="expenseData.html"
+                window.location.href = "expenseData.html"
             }
-        
+
             // console.log(res)Request failed with status code 400
 
         } catch (err) {
             // console.log(err)
-            if(err.message === 'Request failed with status code 401'){
+            if (err.message === 'Request failed with status code 401') {
                 alert("Password wrong")
             }
-            if(err.message === 'Request failed with status code 404'){
+            if (err.message === 'Request failed with status code 404') {
                 alert("Incoorrect Email")
             }
             // console.log('msg'+) 
