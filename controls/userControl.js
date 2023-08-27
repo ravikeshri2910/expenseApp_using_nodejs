@@ -14,7 +14,7 @@ const Download = require('../models/downloadData')
 exports.sinUpRoute = async (req, res, next) => {
 
     try {
-        console.log('here')
+        // console.log('here')
 
         const name = req.body.name;
         const email = req.body.email;
@@ -46,7 +46,8 @@ exports.sinUpRoute = async (req, res, next) => {
 
 
 function generateWebToken(id) {
-    return jwt.sign({ userId: id }, '849448481huhfwufheuyh15418549874ewjhbdweudbweub')
+    return jwt.sign({ userId: id }, process.env.JWT_SECRET_KEY)
+    
 }
 
 exports.loginRoute = async (req, res) => {
@@ -56,7 +57,7 @@ exports.loginRoute = async (req, res) => {
 
         const user = await sinUp.findAll({ where: { email: logInemail } })
 
-        console.log('id+' + user[0].id)
+        // console.log('id+' + user[0].id)
 
         bcrypt.compare(logInPassword, user[0].passWord, (err, result) => {
             if (err) {
@@ -119,9 +120,12 @@ exports.download = async (req, res) => {
 
 function uploadToS3(data, fileName) {
 
-    const BUCKET_NAME = 'newexpence2910'; // bucket name
-    const IAM_USER_KEY = 'AKIAZ35MELEAHC6AWW7C'; //id created in Security credentilas
-    const IAM_USER_SECRET = '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'; //Password created in Security credentilas
+
+    const BUCKET_NAME = process.env.S3_BUCKET_NAME; // bucket name
+    const IAM_USER_KEY = process.env.S3_USER_KEY; //id created in Security credentilas
+    
+    const IAM_USER_SECRET = process.env.S3_USER_SECRET; //Password created in Security credentilas
+  
 
     let s3bucket = new AWS.S3({
         accessKeyId: IAM_USER_KEY,

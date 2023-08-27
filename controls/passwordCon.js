@@ -31,8 +31,10 @@ exports.forgetPassword = async (req, res) => {
             const tranEmailApi = new Sib.TransactionalEmailsApi()
 
             const sender = {
-                email: 'ravikeshri2910@gmail.com',
-                name: 'Expense Traker'
+              
+                email: process.env.SIB_USER,
+                name:  process.env.SIB_NAME
+               
             }
 
             const recevers = [{
@@ -53,11 +55,7 @@ exports.forgetPassword = async (req, res) => {
                 sinupId: user.id
             })
 
-            // console.log('forgetPasss')
-
-
-            // console.log(email)
-
+           
             res.status(201).json({ msg: 'Email sent' })
         } else {
             throw new error('User not exist')
@@ -74,9 +72,7 @@ exports.resetPassword = async (req, res) => {
         let forgetRequest = await ForgetPasswordtable.findOne({ where: { id: id } })
 
         if (forgetRequest) {
-            // console.log('forgetRequest')
-
-            // await forgetRequest.update({ isActive: false })
+           
 
             res.status(200).send(
 

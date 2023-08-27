@@ -122,6 +122,9 @@
             display: flex;
             padding: 20px;
         }
+        /* .pageBtn{
+            border: 5px solid red;
+        } */
     </style>
 </head>
 
@@ -343,11 +346,14 @@
         if (data.hasPeriviosPage) {
             const btn2 = document.createElement('button');
             btn2.innerHTML = `<h4>${data.previosPage}</h4>`;
+            btn2.classList.add("pageBtn");
+            // btn2.innerHTML = `<h4>Prev</h4>`;
             btn2.addEventListener('click', () => getDetails(data.previosPage));
             pages.appendChild(btn2)
         }
 
         const btn1 = document.createElement('button');
+        btn1.classList.add("pageBtn");
         btn1.innerHTML = `<h4>${data.currentPage}</h4>`;
         btn1.style.color = 'red'
         btn1.addEventListener('click', () => getDetails(data.currentPage));
@@ -356,6 +362,8 @@
         if (data.hasNextPage) {
             const btn3 = document.createElement('button');
             btn3.innerHTML = `<h4>${data.nextPage}</h4>`;
+            btn3.classList.add("pageBtn");
+            // btn3.innerHTML = `<h4>Next</h4>`;
             btn3.addEventListener('click', () => getDetails(data.nextPage));
             pages.appendChild(btn3)
         }

@@ -10,7 +10,7 @@ exports.authenticateAddExpense = (req,res,next)=>{
         const token = req.header('Authorization');
         // console.log(" >>>>>>>>"+token)
 
-        const user = jwt.verify(token, '849448481huhfwufheuyh15418549874ewjhbdweudbweub');
+        const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
         // console.log('user >>>>>'+user.userId)
         sinUp.findByPk(user.userId).then(user =>{
@@ -30,7 +30,7 @@ module.exports.authenticate = async (req, res, next) => {
         const token = req.header('Authorization');
         // console.log("Token >>>>>>>>", token);
 
-        const user = jwt.verify(token, '849448481huhfwufheuyh15418549874ewjhbdweudbweub'); // Make sure the secret matches the one used for signing
+        const user = jwt.verify(token, process.env.JWT_SECRET_KEY); // Make sure the secret matches the one used for signing
 
         // console.log('User ID >>>>>', user.userId);
         try {

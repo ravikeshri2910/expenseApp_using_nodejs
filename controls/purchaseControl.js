@@ -8,13 +8,15 @@ exports.purchasepremium = async (req,res)=>{
     try{
         // console.log(req.user)
         const rzp = new Razorpay({
-            key_id : 'rzp_test_06L1Sh8vBldjdz',
-            key_secret : 'SYVwGsSvfxWeVFmhdW17xiOr'
+            
+            key_id : process.env.RAZORPAY_KEY_ID,
+            key_secret : process.env.RAZORPAY_KEY_SECRET
+           
         })
         const amount = 2500;
 
         rzp.orders.create({amount , currency : "INR"}, (err, order) => {
-            console.log('order>>>>>>>>> '+JSON.stringify(order))
+            
             if(err){
                 throw new Error(JSON.stringify(err))
             }
@@ -64,11 +66,10 @@ exports.failedprimiumUpdate = async (req,res)=>{
 
     const {order_id,payment_id} = req.body
 
-    console.log("req.user3333")
-    console.log(order_id,payment_id)
+    // console.log(order_id,payment_id)
 
     let data = await Order.findAll({where : {orderid : order_id}})
-    console.log('data'+ JSON.stringify(data))
+    // console.log('data'+ JSON.stringify(data))
     
 
     data[0].paymentid = payment_id,

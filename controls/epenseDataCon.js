@@ -42,7 +42,7 @@ exports.gettinAllData = async(req, res)=>{
         const userId = req.user.id
         const page = +req.params.page || 1
         const pageLimit = +req.params.pageLimit || 2
-        console.log('pageLimit ...'+ pageLimit)
+        // console.log('pageLimit ...'+ pageLimit)
 
         let limit = pageLimit;
         let offset = 0 + (page -1) * limit;

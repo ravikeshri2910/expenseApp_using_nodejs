@@ -1,6 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser')
+const helmet = require('helmet')
+const compression = require('compression')
+const morgan = require('morgan')
+const fs = require('fs')
+const path = require('path')
 
 
 const sequelize = require('./utill/database');
@@ -15,11 +20,17 @@ const passwordRouter = require('./router/forgetPassword')
 const Forgetpassword = require('./models/forgetPassRequest')
 const Download = require('./models/downloadData')
 
-
+const logData = fs.createWriteStream(
+    path.join(__dirname , 'access.log'),
+    {flags : "a"}
+);
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
+app.use(helmet()) // this is use for increasing Security  after deploying
+app.use(compression()) // it is use to decrease the file size we sending to the client
+app.use(morgan('combined',{stream : logData})) // it is use to collect log details .
+app.use(cors()); // this is use to connect frontend to backend and vice-verse
+app.use(bodyParser.json()); //this is use to convert the data into json
 
 // Association
 SinUp.hasMany(ExpenseData)
@@ -57,8 +68,8 @@ app.use('/password', passwordRouter)
 
 sequelize
     .sync()
-    // .sync({force:true})
+    // .sync({force:true}) // this is use to forcly delete all tables and creates new tables
     .then(result => {
-        app.listen(4000)
+        app.listen(process.env.PORT)
     })
     .catch(err => console.log(err))
