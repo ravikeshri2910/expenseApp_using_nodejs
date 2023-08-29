@@ -2,6 +2,9 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const AWS = require('aws-sdk')
 
+require('dotenv').config();
+
+
 
 const sinUp = require('../models/userSinup');
 const Expenses = require('../models/expenseData');
@@ -47,7 +50,7 @@ exports.sinUpRoute = async (req, res, next) => {
 
 function generateWebToken(id) {
     return jwt.sign({ userId: id }, process.env.JWT_SECRET_KEY)
-    
+
 }
 
 exports.loginRoute = async (req, res) => {
@@ -81,51 +84,55 @@ exports.loginRoute = async (req, res) => {
 
 
 exports.download = async (req, res) => {
+    try {
+        const id = req.user.id
 
-    const id = req.user.id
+        const expenses = await Expenses.findAll({
+            where: { sinupId: id },
+            attributes: ['expense', 'description']
+        });
 
-    const expenses = await Expenses.findAll({
-        where: { sinupId: id },
-        attributes: ['expense', 'description']
-    });
+        // console.log(expenses)
 
-    // console.log(expenses)
+        const stringyFiedExpense = JSON.stringify(expenses);
 
-    const stringyFiedExpense = JSON.stringify(expenses);
+        let today = new Date();
+        let date = today.getDate()
+        let sec = today.getSeconds()
 
-    let today = new Date();
-    let date = today.getDate()
-    let sec = today.getSeconds()
+        const fileName = `Expense${req.user.id}.txt/${date}/${sec}`;
+        // const fileName = 'Expense.txt';
 
-    const fileName = `Expense${req.user.id}.txt/${date}/${sec}`;
-    // const fileName = 'Expense.txt';
+        const fileUrl = await uploadToS3(stringyFiedExpense, fileName)
 
-    const fileUrl = await uploadToS3(stringyFiedExpense, fileName)
+        await Download.create({
+            filename: fileName,
+            url: fileUrl.Location,
+            sinupId: id
+        })
 
-    await Download.create({
-        filename: fileName,
-        url: fileUrl.Location,
-        sinupId: id
-    })
-
-    let down = await Download.findAll({
-        where: { sinupId: id },
-        attributes : ['filename', 'url']
-    })
+        let down = await Download.findAll({
+            where: { sinupId: id },
+            attributes: ['filename', 'url']
+        })
 
 
-    res.status(201).json({ msg: 'File downloaded', fileUrl,down, succes: true })
-    // res.status(201).json({msg : 'File downloaded'})
-}
+        res.status(201).json({ msg: 'File downloaded', fileUrl, down, succes: true })
+        // res.status(201).json({msg : 'File downloaded'})
+    }catch (err) { console.log(err) }
+    }
 
 function uploadToS3(data, fileName) {
 
 
+
     const BUCKET_NAME = process.env.S3_BUCKET_NAME; // bucket name
+
     const IAM_USER_KEY = process.env.S3_USER_KEY; //id created in Security credentilas
-    
+
+
     const IAM_USER_SECRET = process.env.S3_USER_SECRET; //Password created in Security credentilas
-  
+
 
     let s3bucket = new AWS.S3({
         accessKeyId: IAM_USER_KEY,

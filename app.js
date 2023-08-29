@@ -20,15 +20,15 @@ const passwordRouter = require('./router/forgetPassword')
 const Forgetpassword = require('./models/forgetPassRequest')
 const Download = require('./models/downloadData')
 
-const logData = fs.createWriteStream(
-    path.join(__dirname , 'access.log'),
-    {flags : "a"}
-);
+// const logData = fs.createWriteStream(
+//     path.join(__dirname , 'access.log'),
+//     {flags : "a"}
+// );
 
 const app = express();
 app.use(helmet()) // this is use for increasing Security  after deploying
 app.use(compression()) // it is use to decrease the file size we sending to the client
-app.use(morgan('combined',{stream : logData})) // it is use to collect log details .
+//app.use(morgan('combined',{stream : logData})) // it is use to collect log details .
 app.use(cors()); // this is use to connect frontend to backend and vice-verse
 app.use(bodyParser.json()); //this is use to convert the data into json
 

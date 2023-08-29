@@ -27,7 +27,7 @@ exports.authenticateAddExpense = (req,res,next)=>{
 
 module.exports.authenticate = async (req, res, next) => {
     try {
-        const token = req.header('Authorization');
+        const token = req.header('Authorization');//coming from frontend
         // console.log("Token >>>>>>>>", token);
 
         const user = jwt.verify(token, process.env.JWT_SECRET_KEY); // Make sure the secret matches the one used for signing
