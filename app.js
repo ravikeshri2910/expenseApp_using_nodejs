@@ -37,7 +37,7 @@ const app = express();
     next(); 
 })
 
-app.use(helmet()) // this is use for increasing Security  after deploying
+//app.use(helmet()) // this is use for increasing Security  after deploying
 app.use(compression()) // it is use to decrease the file size we sending to the client
 //app.use(morgan('combined',{stream : logData})) // it is use to collect log details .
 app.use(cors()); // this is use to connect frontend to backend and vice-verse
