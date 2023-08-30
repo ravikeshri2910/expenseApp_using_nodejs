@@ -26,6 +26,12 @@ const Download = require('./models/downloadData')
 // );
 
 const app = express();
+
+app.use(function(req, res, next){
+    res.header("Content-Security-Policy", "default-src * 'unsafe-inline'  'unsafe-eval' data: blob:;")
+    next();
+ })
+
 app.use(helmet()) // this is use for increasing Security  after deploying
 app.use(compression()) // it is use to decrease the file size we sending to the client
 //app.use(morgan('combined',{stream : logData})) // it is use to collect log details .
