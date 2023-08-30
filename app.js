@@ -63,6 +63,13 @@ app.use('/premium', premiumRouter)
 // forget password
 app.use('/password', passwordRouter)
 
+
+// this is dynamic rout for frontend
+app.use((req,res)=>{
+
+    res.sendFile(path.join(__dirname, `views/${req.url}`))
+})
+
 // http://localhost:4000/password/resetpassword
 
 
