@@ -23,7 +23,7 @@ async function sinUpData(event) {
 
         // console.log(sinUpData)
 
-        let res = await axios.post("http://35.173.199.140:3000/user/expense-sinup-data", sinUpData)
+        let res = await axios.post("http://3.80.172.222:3000/user/expense-sinup-data", sinUpData)
 
         name.value = "";
         email.value = ""
