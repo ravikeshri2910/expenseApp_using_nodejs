@@ -32,6 +32,8 @@ const app = express();
 //     next();
 //  })
 
+//http://35.173.199.140:3000/login.html
+
  app.use(function(req, res, next){ 
     res.header("Content-Security-Policy", "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; form-action 'self';") 
     next(); 
