@@ -21,7 +21,11 @@ async function logInData(event) {
 
         // console.log(sinUpData)
 
-        let res = await axios.post("http://3.80.172.222:3000/user/expense-login-data", logInData)
+        // let res = await axios.post("http://localhost:4000/user/expense-login-data", logInData)
+
+        // let res = await axios.post("http://3.80.172.222:4000/user/expense-login-data", logInData)
+
+        let res = await axios.post("http://localhost:4000/user/expense-login-data", logInData)
 
 
         email.value = ""

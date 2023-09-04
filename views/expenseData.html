@@ -63,11 +63,12 @@
 
         .listi {
             margin-top: 2px;
+            height: 550px;
         }
 
         #details {
             width: 100%;
-            height: 350px;
+            height: 550px;
             /* margin-left: 30%; */
         }
 
@@ -89,7 +90,7 @@
             width: 50%;
             background-color: white;
             border: 5px solid rgb(0, 157, 255);
-            height: 450px;
+            height: 650px;
             margin-right: 15px;
 
 
@@ -114,10 +115,12 @@
             background-color: goldenrod;
             border: none;
         }
+
         #premium1 {
             background-color: goldenrod;
             border: none;
         }
+
         #premium2 {
             background-color: goldenrod;
             border: none;
@@ -126,13 +129,71 @@
         #member {
             color: goldenrod;
         }
-        #pagination{
+
+        #pagination {
             display: flex;
             padding: 20px;
         }
-        /* .pageBtn{
-            border: 5px solid red;
-        } */
+
+        /* Extra small devices (phones, 600px and down) */
+        @media only screen and (max-width: 600px) {
+
+
+            .contain {
+
+                display: grid;
+                /* margin-top: 10px; */
+                /* border: 2ox solid red; */
+            }
+
+            .fstCont {
+                width: 100%;
+            }
+
+            .detailCon {
+                width: 100%;
+                background-color: white;
+                border: 5px solid rgb(0, 157, 255);
+                height: 650px;
+                margin: 15px;
+                margin-right: 15px;
+                padding: 10px;
+
+
+            }
+
+            #details {
+                width: 100%;
+                height: 550px;
+                /* border: 2px solid red; */
+                /* margin-left: 30%; */
+            }
+
+
+        }
+
+        /* Small devices (portrait tablets and large phones, 600px and up) */
+        @media only screen and (min-width: 600px) {
+            .detailCon {
+                width: 50%;
+                background-color: white;
+                border: 5px solid rgb(0, 157, 255);
+                height: 650px;
+                margin: 15px;
+                margin-right: 15px;
+                padding: 10px;
+
+
+            }
+
+            #details {
+                width: 100%;
+                height: 550px;
+                /* border: 2px solid red; */
+                /* margin-left: 30%; */
+            }
+
+        }
     </style>
 </head>
 
@@ -142,7 +203,7 @@
         <div class="fstCont">
 
             <form>
-                <button id="premium" type="button" class="btn btn-secondary" >Buy
+                <button id="premium" type="button" class="btn btn-secondary">Buy
                     Premium</button>
 
                 <h5 id="member" hidden>Primium Member</h5>
@@ -168,7 +229,7 @@
 
 
                 <div class="form-group">
-                    <!-- <label for="">Enter Description:</label> -->
+                    <label for="">Enter Description:</label>
                     <input type="text" required class="form-control" id="description"
                         placeholder="Enter description here">
                 </div>
@@ -190,8 +251,8 @@
 
 
 
-                <button class="rat" type="submit" id="mouseover" >Submit</button>
-                <button class="rat" type="submit" hidden id="update" >Update</button>
+                <button class="rat" type="submit" id="mouseover">Submit</button>
+                <button class="rat" type="submit" hidden id="update">Update</button>
                 <!-- <button class="rat" type="submit" id="mouseover" onclick="consolevalue(event)">Submit</button>
                 <button class="rat" type="submit" hidden id="update" onclick="updateData(event)">Update</button> -->
 
@@ -199,7 +260,7 @@
 
 
                 <button id="downloadexpense" hidden class="btn btn-secondary">Download
-                <!-- <button onclick="download()" id="downloadexpense" hidden class="btn btn-secondary">Download -->
+                    <!-- <button onclick="download()" id="downloadexpense" hidden class="btn btn-secondary">Download -->
                     File</button>
 
                 <ul id="leadBoardDetails">
@@ -209,7 +270,7 @@
 
         </div>
         <div class="detailCon">
-            <button id="premium1" type="button" class="btn btn-secondary" >Log out</button>
+            <button id="premium1" type="button" class="btn btn-secondary">Log out</button>
             <!-- <button id="premium1" type="button" class="btn btn-secondary" onclick="logOut(event)">Log out</button> -->
 
             <h4>Expense Details</h4>
@@ -219,7 +280,7 @@
             </ol>
             <div id="pagination">
                 <div id="pages"></div>
-                <div class="form-group" >
+                <div class="form-group">
                     <select class="form-control" id="pageLimit">
                         <option>2</option>
                         <option>4</option>
@@ -228,7 +289,7 @@
                         <option>10</option>
                     </select>
                 </div>
-                <button id="premium2" type="button" class="btn btn-secondary" >Ok</button>
+                <button id="premium2" type="button" class="btn btn-secondary">Ok</button>
                 <!-- <button id="premium2" type="button" class="btn btn-secondary" onclick="getDetails(event)">Ok</button> -->
             </div>
 
@@ -257,7 +318,7 @@
 
 <script src="./expenseData.js">
 
-   
+
 
 </script>
 

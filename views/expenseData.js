@@ -14,7 +14,8 @@ async function download() {
     try {
         console.log('here')
         let token = localStorage.getItem('token')
-        const site = `http://3.80.172.222:3000/user/download`
+        const site = `http://localhost:4000/user/download`
+        // const site = `http://3.80.172.222:4000/user/download`
         const res = await axios.get(site, { headers: { "Authorization": token } })
         console.log(res)
 
@@ -68,7 +69,8 @@ async function getDetails(page) {
         // console.log(token)
 
 
-        const site = `http://3.80.172.222:3000/logIn/get-data/${page}/${pageLimit}`
+        const site = `http://localhost:4000/logIn/get-data/${page}/${pageLimit}`
+        // const site = `http://3.80.172.222:4000/logIn/get-data/${page}/${pageLimit}`
 
         let token = localStorage.getItem('token')
         let res = await axios.get(site, { headers: { "Authorization": token } })
@@ -173,7 +175,8 @@ async function consolevalue(event) {
         submitBtn.hidden = false;
 
 
-        let res = await axios.post("http://3.80.172.222:3000/logIn/expense-data", obj, { headers: { "Authorization": token } })
+        let res = await axios.post("http://localhost:4000/logIn/expense-data", obj, { headers: { "Authorization": token } })
+        // let res = await axios.post("http://3.80.172.222:4000/logIn/expense-data", obj, { headers: { "Authorization": token } })
 
         // leadBoard(event)
 
@@ -246,7 +249,8 @@ async function deleteData(event, id) {
         event.preventDefault();
         // let site
         let token = localStorage.getItem('token')
-        let site = `http://3.80.172.222:3000/logIn/raat-data/${id}`
+        let site = `http://localhost:4000/logIn/raat-data/${id}`
+        // let site = `http://3.80.172.222:4000/logIn/raat-data/${id}`
         let res = await axios.get(site, { headers: { "Authorization": token } })
         // console.log(res.status)
         if (res.status === 201) {
@@ -270,7 +274,8 @@ async function editData(event, id) {
         // console.log(id)
         // let site
         let token = localStorage.getItem('token')
-        let site = `http://3.80.172.222:3000/logIn/edit-data/${id}`
+        let site = `http://localhost:4000/logIn/edit-data/${id}`
+        // let site = `http://3.80.172.222:4000/logIn/edit-data/${id}`
         let res = await axios.get(site, { headers: { "Authorization": token } })
         // console.log(res.data)
         getContent(res.data.userdetails[0], res.data.userdetails[0].id)
@@ -321,7 +326,8 @@ async function updateData(event) {
 
         // console.log(obj)
         let token = localStorage.getItem('token')
-        let site = `http://3.80.172.222:3000/logIn/updated-data`
+        let site = `http://localhost:4000/logIn/updated-data`
+        // let site = `http://3.80.172.222:4000/logIn/updated-data`
 
         let res = await axios.post(site, obj, { headers: { "Authorization": token } })
 
@@ -347,7 +353,9 @@ async function buyPremium(event) {
         event.preventDefault();
         const token = localStorage.getItem('token');
 
-        const site = `http://3.80.172.222:3000/purchase/premiummembership`
+        const site = `http://localhost:4000/purchase/premiummembership`
+
+        // const site = `http://3.80.172.222:4000/purchase/premiummembership`
         const response = await axios.get(site, { headers: { "Authorization": token } })
 
         // console.log(response)
@@ -359,7 +367,8 @@ async function buyPremium(event) {
             // now Handeler function will handel the success payment
 
             "handler": async function (response) {
-                let res = await axios.post('http://3.80.172.222:3000/purchase/updatetransactionstatus', {
+                // let res = await axios.post('http://3.80.172.222:4000/purchase/updatetransactionstatus', {
+                let res = await axios.post('http://localhost:4000/purchase/updatetransactionstatus', {
                     order_id: options.order_id,
                     payment_id: response.razorpay_payment_id,
                 }, { headers: { "Authorization": token } })
@@ -379,7 +388,8 @@ async function buyPremium(event) {
             // console.log(response.error.metadata)
 
             const token = localStorage.getItem('token');
-            await axios.post('http://3.80.172.222:3000/purchase/failed/updatetransactionstatus', {
+            // await axios.post('http://3.80.172.222:4000/purchase/failed/updatetransactionstatus', {
+            await axios.post('http://localhost:4000/purchase/failed/updatetransactionstatus', {
                 order_id: response.error.metadata.order_id,
                 payment_id: response.error.metadata.payment_id,
             }, { headers: { "Authorization": token } })
@@ -401,7 +411,8 @@ async function leadBoard() {
     // event.preventDefault();
 
     let token = localStorage.getItem('token')
-    const site = `http://3.80.172.222:3000/premium/leadBoardDetails`
+    const site = `http://localhost:4000/premium/leadBoardDetails`
+    // const site = `http://3.80.172.222:4000/premium/leadBoardDetails`
     const res = await axios.get(site, { headers: { "Authorization": token } })
 
 

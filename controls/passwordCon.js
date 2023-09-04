@@ -13,7 +13,7 @@ const { error } = require('console');
 exports.forgetPassword = async (req, res) => {
 
     try {
-
+console.log('here')
         const email = req.body.email
 
         const user = await SinUp.findOne({ where: { email: email } })
@@ -46,7 +46,7 @@ exports.forgetPassword = async (req, res) => {
                 to: recevers,
                 subject: `Otp verification`,
                 textContent: `Click on Reset`,
-                htmlContent: `<a href = "http://3.80.172.222:3000/password/resetpassword/${id}">http://3.80.172.222:3000/password/resetpassword/${id}</a>`
+                htmlContent: `<a href = "http://localhost:4000/password/resetpassword/${id}">http://localhost:4000/password/resetpassword/${id}</a>`
             })
 
             await ForgetPasswordtable.create({
@@ -107,7 +107,7 @@ exports.resetPassword = async (req, res) => {
                         npassword : npass
                     }
             
-                    const res = await axios.post("http://3.80.172.222:3000/password/updatePassword/${id}",obj)
+                    const res = await axios.post("http://localhost:4000/password/updatePassword/${id}",obj)
             
                     // console.log(res)
 

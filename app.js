@@ -35,10 +35,10 @@ const app = express();
 //http://3.80.172.222:3000/login.html new
 //http://35.173.199.140:3000/login.html
 
- app.use(function(req, res, next){ 
-    res.header("Content-Security-Policy", "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; form-action 'self';") 
-    next(); 
-})
+//  app.use(function(req, res, next){ 
+//     res.header("Content-Security-Policy", "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; form-action 'self';") 
+//     next(); 
+// })
 
 //app.use(helmet()) // this is use for increasing Security  after deploying
 app.use(compression()) // it is use to decrease the file size we sending to the client
@@ -79,10 +79,10 @@ app.use('/password', passwordRouter)
 
 
 // this is dynamic rout for frontend
-app.use((req,res)=>{
+// app.use((req,res)=>{
 
-    res.sendFile(path.join(__dirname, `views/${req.url}`))
-})
+//     res.sendFile(path.join(__dirname, `views/${req.url}`))
+// })
 
 // http://localhost:4000/password/resetpassword
 

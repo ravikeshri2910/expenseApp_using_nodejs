@@ -10,7 +10,8 @@ const submit = document.getElementById('submit')
             npassword : npass
         }
 
-        const res = await axios.post("http://3.80.172.222:3000/password/updatePassword",obj)
+        // const res = await axios.post("http://3.80.172.222:4000/password/updatePassword",obj)
+        const res = await axios.post("http://localhost:4000/password/updatePassword",obj)
 
         console.log(res)
 
